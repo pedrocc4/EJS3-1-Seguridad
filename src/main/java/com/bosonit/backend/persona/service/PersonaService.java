@@ -1,20 +1,20 @@
 package com.bosonit.backend.persona.service;
 
-import com.bosonit.backend.persona.domain.Persona;
+import com.bosonit.backend.persona.infrastructure.controller.dto.input.PersonaInputDTO;
+import com.bosonit.backend.persona.infrastructure.controller.dto.output.PersonaOutputDTO;
 
-import javax.validation.Valid;
 import java.util.List;
 
 public interface PersonaService {
-    int addPersona(@Valid Persona persona);
+    PersonaOutputDTO addPersona(PersonaInputDTO personaInputDTO);
 
-    Persona getPersona(Integer id);
+    PersonaOutputDTO getPersona(Integer id);
 
-    List<Persona> getPersonas();
+    List<PersonaOutputDTO> getPersonas();
 
-    Persona getPersonaByUser(String username);
+    PersonaOutputDTO getPersonaByUser(String username);
 
-    void actPersona(@Valid Persona persona);
+    void actPersona(int id, PersonaInputDTO personaInputDTO);
 
-    void delPersona(@Valid Persona persona);
+    void delPersona(int id);
 }

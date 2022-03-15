@@ -1,25 +1,28 @@
 package com.bosonit.backend.persona.service;
 
-import com.bosonit.backend.persona.domain.Persona;
 import com.bosonit.backend.persona.domain.exceptions.PersonaNoEncontrada;
 import com.bosonit.backend.persona.domain.exceptions.PersonaYaRegistrada;
+import com.bosonit.backend.persona.infrastructure.controller.dto.input.PersonaInputDTO;
+import com.bosonit.backend.persona.infrastructure.controller.dto.output.PersonaOutputDTO;
+import com.bosonit.backend.persona.infrastructure.controller.mapper.PersonaMapper;
 import com.bosonit.backend.persona.repository.PersonaRepositoryJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
 @Service
-@Validated
 public class PersonaServiceImpl implements PersonaService {
 
     @Autowired
     private PersonaRepositoryJPA repository;
 
+    @Autowired
+    private PersonaMapper mapper;
+
     @Override
-    public int addPersona(Persona persona) throws PersonaYaRegistrada {
-        /* EJEMPLO: comprobar si existe una persona (lioso y no efectivo en derterminados casos */
+    public PersonaOutputDTO addPersona(PersonaInputDTO personaInputDTO) throws PersonaYaRegistrada {
+        /* EJEMPLO: comprobar si existe una persona (lioso y no efectivo en determinados casos */
 //        ExampleMatcher modelMatcher = ExampleMatcher.matching()
 //                .withIgnorePaths("id")
 //                .withMatcher("username", ignoreCase());
@@ -33,37 +36,38 @@ public class PersonaServiceImpl implements PersonaService {
 
         // Comprobacion con previa busqueda (menos eficiente [supongo])
 
-        if (!repository.findByUsername(persona.getUsuario()).isPresent())
-            return repository.save(persona).getId();
+        if (!repository.findByUsername(personaInputDTO.getUsuario()).isPresent())
+            return mapper.toDTO(repository.save(mapper.toEntity(personaInputDTO)));
         throw new PersonaYaRegistrada();
     }
 
     @Override
-    public Persona getPersona(Integer id) throws PersonaNoEncontrada {
-        return repository.findById(id).orElseThrow(PersonaNoEncontrada::new);
+    public PersonaOutputDTO getPersona(Integer id) throws PersonaNoEncontrada {
+        return mapper.toDTO(repository.findById(id).orElseThrow(PersonaNoEncontrada::new));
     }
 
     @Override
-    public Persona getPersonaByUser(String username) throws PersonaNoEncontrada {
-        return repository.findByUsername(username).orElseThrow(PersonaNoEncontrada::new);
+    public PersonaOutputDTO getPersonaByUser(String username) throws PersonaNoEncontrada {
+        return mapper.toDTO(repository.findByUsername(username).orElseThrow(PersonaNoEncontrada::new));
     }
 
     @Override
-    public List<Persona> getPersonas() {
-        return repository.findAll();
+    public List<PersonaOutputDTO> getPersonas() {
+        return mapper.toDTOList(repository.findAll());
     }
 
     @Override
-    public void actPersona(Persona p) throws PersonaNoEncontrada {
-        if (!repository.findById(p.getId()).isPresent())
+    public void actPersona(int id, PersonaInputDTO personaInputDTO) throws PersonaNoEncontrada {
+        if (!repository.findById(id).isPresent())
             throw new PersonaNoEncontrada();
-        repository.save(p);
+
+        repository.save(mapper.toEntity(personaInputDTO));
     }
 
     @Override
-    public void delPersona(Persona p) throws PersonaNoEncontrada {
-        if (!repository.findById(p.getId()).isPresent())
+    public void delPersona(int id) throws PersonaNoEncontrada {
+        if (!repository.findById(id).isPresent())
             throw new PersonaNoEncontrada();
-        repository.delete(p);
+        repository.delete((repository.findById(id).orElseThrow(PersonaNoEncontrada::new)));
     }
 }

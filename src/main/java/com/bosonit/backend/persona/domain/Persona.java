@@ -15,41 +15,41 @@ import java.util.Date;
 public class Persona {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private int id;
 
     @NotNull
     @Size(min = 6, max = 10)
     @Column(unique = true)
-    String usuario;
+    private String usuario;
 
     @NotNull
-    String password;
+    private String password;
 
     @NotNull
-    String name;
+    private String name;
 
-    String surname;
-
-    @NotNull
-    @Email
-    String company_email;
+    private String surname;
 
     @NotNull
     @Email
-    String personal_email;
+    private String company_email;
 
     @NotNull
-    String city;
+    @Email
+    private String personal_email;
 
     @NotNull
-    Boolean active;
+    private String city;
 
     @NotNull
-    Date created_date;
+    private Boolean active;
 
-    String imagen_url;
+    @NotNull
+    private Date created_date;
 
-    Date termination_date;
+    private String imagen_url;
+
+    private Date termination_date;
 /*
     public Persona(String usuario, String password, String name, String company_email, String personal_email, String city, Boolean active, Date created_date) {
         this.usuario = usuario;
