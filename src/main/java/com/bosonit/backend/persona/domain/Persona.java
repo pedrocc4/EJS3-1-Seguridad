@@ -1,4 +1,4 @@
-package com.bosonit.backend.itinerariocontinuacion.entidades;
+package com.bosonit.backend.persona.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
