@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = {
-        "com.bosonit.backend.persona.infrastructure.controller",
+        "com.bosonit.backend.persona.infrastructure",
         "com.bosonit.backend.persona.service",
         "com.bosonit.backend.persona.repository",
         "com.bosonit.backend.persona.domain"

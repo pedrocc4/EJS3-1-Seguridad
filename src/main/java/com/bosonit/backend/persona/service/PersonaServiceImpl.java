@@ -1,14 +1,15 @@
 package com.bosonit.backend.persona.service;
 
-import com.bosonit.backend.persona.domain.exceptions.PersonaNoEncontrada;
-import com.bosonit.backend.persona.domain.exceptions.PersonaYaRegistrada;
 import com.bosonit.backend.persona.infrastructure.controller.dto.input.PersonaInputDTO;
 import com.bosonit.backend.persona.infrastructure.controller.dto.output.PersonaOutputDTO;
 import com.bosonit.backend.persona.infrastructure.controller.mapper.PersonaMapper;
+import com.bosonit.backend.persona.infrastructure.exceptions.PersonaNoEncontrada;
+import com.bosonit.backend.persona.infrastructure.exceptions.UnprocesableException;
 import com.bosonit.backend.persona.repository.PersonaRepositoryJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 @Service
@@ -21,34 +22,28 @@ public class PersonaServiceImpl implements PersonaService {
     private PersonaMapper mapper;
 
     @Override
-    public PersonaOutputDTO addPersona(PersonaInputDTO personaInputDTO) throws PersonaYaRegistrada {
-        /* EJEMPLO: comprobar si existe una persona (lioso y no efectivo en determinados casos */
-//        ExampleMatcher modelMatcher = ExampleMatcher.matching()
-//                .withIgnorePaths("id")
-//                .withMatcher("username", ignoreCase());
-//
-//        Example<Persona> example = Example.of(persona, modelMatcher);
-//
-//        if (!repository.exists(example)) {
-//            return repository.save(persona).getId();
-//        }
-//        throw new PersonaYaRegistrada();
-
-        // Comprobacion con previa busqueda (menos eficiente [supongo])
-
-        if (!repository.findByUsername(personaInputDTO.getUsuario()).isPresent())
+    public PersonaOutputDTO addPersona(PersonaInputDTO personaInputDTO) throws UnprocesableException {
+        try {
             return mapper.toDTO(repository.save(mapper.toEntity(personaInputDTO)));
-        throw new PersonaYaRegistrada();
+        } catch (ConstraintViolationException e) {
+            throw new UnprocesableException(e.getMessage());
+        }
     }
 
     @Override
     public PersonaOutputDTO getPersona(Integer id) throws PersonaNoEncontrada {
-        return mapper.toDTO(repository.findById(id).orElseThrow(PersonaNoEncontrada::new));
+        return mapper.toDTO(repository
+                .findById(id)
+                .orElseThrow(() -> new PersonaNoEncontrada
+                        ("Persona con id: " + id + ", no encontrado")));
     }
 
     @Override
     public PersonaOutputDTO getPersonaByUser(String username) throws PersonaNoEncontrada {
-        return mapper.toDTO(repository.findByUsername(username).orElseThrow(PersonaNoEncontrada::new));
+        return mapper.toDTO(repository
+                .findByUsername(username)
+                .orElseThrow(() -> new PersonaNoEncontrada
+                        ("Usuario: " + username + ", no encontrado")));
     }
 
     @Override
@@ -57,17 +52,23 @@ public class PersonaServiceImpl implements PersonaService {
     }
 
     @Override
-    public void actPersona(int id, PersonaInputDTO personaInputDTO) throws PersonaNoEncontrada {
+    public void actPersona(int id, PersonaInputDTO personaInputDTO)
+            throws PersonaNoEncontrada, UnprocesableException {
         if (!repository.findById(id).isPresent())
-            throw new PersonaNoEncontrada();
+            throw new PersonaNoEncontrada("Persona con id: " + id + ", no encontrado");
 
-        repository.save(mapper.toEntity(personaInputDTO));
+        try {
+            mapper.toDTO(repository.save(mapper.toEntity(personaInputDTO)));
+        } catch (ConstraintViolationException e) {
+            throw new UnprocesableException(e.getMessage());
+        }
     }
 
     @Override
     public void delPersona(int id) throws PersonaNoEncontrada {
-        if (!repository.findById(id).isPresent())
-            throw new PersonaNoEncontrada();
-        repository.delete((repository.findById(id).orElseThrow(PersonaNoEncontrada::new)));
+        repository.delete((repository
+                .findById(id)
+                .orElseThrow(() -> new PersonaNoEncontrada
+                        ("Persona con id: " + id + ", no encontrado"))));
     }
 }
