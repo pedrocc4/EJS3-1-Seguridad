@@ -4,6 +4,7 @@ import com.bosonit.backend.persona.infrastructure.controller.dto.input.PersonaIn
 import com.bosonit.backend.persona.infrastructure.controller.dto.output.PersonaOutputDTO;
 import com.bosonit.backend.persona.infrastructure.controller.mapper.PersonaMapper;
 import com.bosonit.backend.persona.infrastructure.exceptions.PersonaNoEncontrada;
+import com.bosonit.backend.persona.infrastructure.exceptions.PersonaYaRegistrada;
 import com.bosonit.backend.persona.infrastructure.exceptions.UnprocesableException;
 import com.bosonit.backend.persona.repository.PersonaRepositoryJPA;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class PersonaServiceImpl implements PersonaService {
 
     @Override
     public PersonaOutputDTO addPersona(PersonaInputDTO personaInputDTO) throws UnprocesableException {
+        if (repository.findByUsername(personaInputDTO.getUsuario()).isPresent())
+            throw new PersonaYaRegistrada("Usuario ya registrado");
         try {
             return mapper.toDTO(repository.save(mapper.toEntity(personaInputDTO)));
         } catch (ConstraintViolationException e) {
@@ -54,7 +57,7 @@ public class PersonaServiceImpl implements PersonaService {
     @Override
     public void actPersona(int id, PersonaInputDTO personaInputDTO)
             throws PersonaNoEncontrada, UnprocesableException {
-        if (!repository.findById(id).isPresent())
+        if (repository.findById(id).isEmpty())
             throw new PersonaNoEncontrada("Persona con id: " + id + ", no encontrado");
 
         try {
