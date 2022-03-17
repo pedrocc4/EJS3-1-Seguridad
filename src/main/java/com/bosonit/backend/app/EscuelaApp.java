@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication(scanBasePackages = {
         "com.bosonit.backend.persona",
         "com.bosonit.backend.estudiante",
+        "com.bosonit.backend.utils"
 })
 @EntityScan(basePackages = {
         "com.bosonit.backend.persona.domain",

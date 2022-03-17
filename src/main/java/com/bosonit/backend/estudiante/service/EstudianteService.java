@@ -10,7 +10,7 @@ public interface EstudianteService {
 
     EstudianteOutputDTO getEstudiante(String id);
 
-    EstudianteOutputDTO actEstudiante(String id, EstudianteInputDTO estudianteInputDTO);
+    EstudianteOutputDTO actEstudiante(String id, EstudianteInputDTO estudianteInputDTO) throws Exception;
 
     void delEstudiante(String id);
 

@@ -2,9 +2,9 @@ package com.bosonit.backend.estudiante.infrastructure.controller;
 
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteInputDTO;
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteOutputDTO;
-import com.bosonit.backend.estudiante.infrastructure.exceptions.EstudianteNoEncontrado;
 import com.bosonit.backend.estudiante.service.EstudianteService;
-import com.bosonit.backend.persona.infrastructure.exceptions.UnprocesableException;
+import com.bosonit.backend.utils.exceptions.EstudianteNoEncontrado;
+import com.bosonit.backend.utils.exceptions.UnprocesableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,17 +53,32 @@ public class Controller {
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("estudiante/{id}")
+    //@PatchMapping -- para un campo en concreto
     public ResponseEntity<EstudianteOutputDTO> actEstudiante(
             @PathVariable String id,
             @RequestBody EstudianteInputDTO estudianteInputDTO
-    ) {
+    ) throws Exception {
         log.info("Intentando actualizar estudiante con id: " + id);
         try {
             return ResponseEntity.status(HttpStatus.OK).body(service.actEstudiante(id, estudianteInputDTO));
+        } catch (
+                EstudianteNoEncontrado e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
+        } catch (
+                UnprocesableException u) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "error", u);
+        }
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("estudiante/{id}")
+    public ResponseEntity<Void> delEstudiante(@PathVariable String id) {
+        log.info("Intentando borrar estudiante con id: " + id);
+        try {
+            service.delEstudiante(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (EstudianteNoEncontrado e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
-        } catch (UnprocesableException u) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "error", u);
         }
     }
 }

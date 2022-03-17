@@ -32,8 +32,6 @@ public class Profesor {
 
     // Relacion con tablas
 
-//    @OneToOne
-//    private Persona id_persona;
 
     @OneToMany
     private List<Estudiante> estudiantes;

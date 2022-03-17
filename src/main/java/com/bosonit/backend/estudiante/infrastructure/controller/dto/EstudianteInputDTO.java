@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 public class EstudianteInputDTO {
-    private String id_estudiante;
     private int num_hours_week;
     private String comments;
     private String branch;

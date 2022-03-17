@@ -2,9 +2,9 @@ package com.bosonit.backend.persona.infrastructure.controller;
 
 import com.bosonit.backend.persona.infrastructure.controller.dto.input.PersonaInputDTO;
 import com.bosonit.backend.persona.infrastructure.controller.dto.output.PersonaOutputDTO;
-import com.bosonit.backend.persona.infrastructure.exceptions.PersonaNoEncontrada;
-import com.bosonit.backend.persona.infrastructure.exceptions.UnprocesableException;
 import com.bosonit.backend.persona.service.PersonaService;
+import com.bosonit.backend.utils.exceptions.PersonaNoEncontrada;
+import com.bosonit.backend.utils.exceptions.UnprocesableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,12 +1,14 @@
 package com.bosonit.backend.persona.service;
 
+import com.bosonit.backend.persona.domain.Persona;
 import com.bosonit.backend.persona.infrastructure.controller.dto.input.PersonaInputDTO;
 import com.bosonit.backend.persona.infrastructure.controller.dto.output.PersonaOutputDTO;
 import com.bosonit.backend.persona.infrastructure.controller.mapper.PersonaMapper;
-import com.bosonit.backend.persona.infrastructure.exceptions.PersonaNoEncontrada;
-import com.bosonit.backend.persona.infrastructure.exceptions.PersonaYaRegistrada;
-import com.bosonit.backend.persona.infrastructure.exceptions.UnprocesableException;
 import com.bosonit.backend.persona.repository.PersonaRepositoryJPA;
+import com.bosonit.backend.utils.exceptions.PersonaNoEncontrada;
+import com.bosonit.backend.utils.exceptions.PersonaYaRegistrada;
+import com.bosonit.backend.utils.exceptions.UnprocesableException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,12 +58,18 @@ public class PersonaServiceImpl implements PersonaService {
 
     @Override
     public void actPersona(int id, PersonaInputDTO personaInputDTO)
-            throws PersonaNoEncontrada, UnprocesableException {
-        if (repository.findById(id).isEmpty())
-            throw new PersonaNoEncontrada("Persona con id: " + id + ", no encontrado");
-
+            throws ConstraintViolationException, PersonaNoEncontrada {
         try {
-            mapper.toDTO(repository.save(mapper.toEntity(personaInputDTO)));
+            Persona persona =
+                    repository
+                            .findById(id)
+                            .orElseThrow(() ->
+                                    new PersonaNoEncontrada(
+                                            "Persona con id: " + id + ", no encontrada"));
+            // Asignacion de nuevos atributos
+
+            BeanUtils.copyProperties(personaInputDTO, persona);
+            repository.save(persona);
         } catch (ConstraintViolationException e) {
             throw new UnprocesableException(e.getMessage());
         }

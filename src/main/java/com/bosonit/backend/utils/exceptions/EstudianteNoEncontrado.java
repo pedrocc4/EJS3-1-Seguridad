@@ -1,10 +1,10 @@
-package com.bosonit.backend.estudiante.infrastructure.exceptions;
+package com.bosonit.backend.utils.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class EstudianteNoEncontrado extends RuntimeException {
+public class EstudianteNoEncontrado extends RuntimeException{
     public EstudianteNoEncontrado(String message) {
         super(message);
     }

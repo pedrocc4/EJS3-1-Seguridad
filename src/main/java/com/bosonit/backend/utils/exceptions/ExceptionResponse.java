@@ -1,4 +1,4 @@
-package com.bosonit.backend.estudiante.infrastructure.exceptions;
+package com.bosonit.backend.utils.exceptions;
 
 import lombok.Getter;
 

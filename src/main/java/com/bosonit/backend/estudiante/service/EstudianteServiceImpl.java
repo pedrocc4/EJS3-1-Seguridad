@@ -1,11 +1,13 @@
 package com.bosonit.backend.estudiante.service;
 
+import com.bosonit.backend.estudiante.domain.Estudiante;
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteInputDTO;
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteOutputDTO;
 import com.bosonit.backend.estudiante.infrastructure.controller.mapper.EstudianteMapper;
-import com.bosonit.backend.estudiante.infrastructure.exceptions.EstudianteNoEncontrado;
 import com.bosonit.backend.estudiante.repository.EstudianteRepositoryJPA;
-import com.bosonit.backend.persona.infrastructure.exceptions.UnprocesableException;
+import com.bosonit.backend.utils.exceptions.EstudianteNoEncontrado;
+import com.bosonit.backend.utils.exceptions.UnprocesableException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +32,6 @@ public class EstudianteServiceImpl implements EstudianteService {
         } catch (ConstraintViolationException c) {
             throw new UnprocesableException(c.getMessage());
         }
-
     }
 
     @Override
@@ -44,26 +45,33 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @Override
     public EstudianteOutputDTO actEstudiante(String id, EstudianteInputDTO estudianteInputDTO)
-            throws EstudianteNoEncontrado, UnprocesableException {
-        if (repository.findById(id).isEmpty())
-            throw new EstudianteNoEncontrado("Estudiante con id: " + id + ", no encontrado");
-
+            throws ConstraintViolationException, EstudianteNoEncontrado {
         try {
-            estudianteInputDTO.setId_estudiante(id);
-            return mapper.toDTO(repository.save(mapper.toEntity(estudianteInputDTO)));
+            Estudiante estudiante =
+                    repository
+                            .findById(id)
+                            .orElseThrow(() ->
+                                    new EstudianteNoEncontrado(
+                                            "Estudiante con id: " + id + ", no encontrado"));
+
+            // Asignacion de nuevos atributos
+            BeanUtils.copyProperties(estudianteInputDTO, estudiante);
+            return mapper.toDTO(repository.save(estudiante));
         } catch (ConstraintViolationException e) {
             throw new UnprocesableException(e.getMessage());
         }
     }
 
-
     @Override
     public void delEstudiante(String id) {
-
+        repository.delete((repository
+                .findById(id)
+                .orElseThrow(() -> new EstudianteNoEncontrado
+                        ("Estudiante con id: " + id + ", no encontrado"))));
     }
 
     @Override
     public List<EstudianteOutputDTO> getEstudiantes() {
-        return null;
+        return mapper.toDTOList(repository.findAll());
     }
 }
