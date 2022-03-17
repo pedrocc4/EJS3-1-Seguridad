@@ -15,14 +15,14 @@ import java.util.List;
 @Entity
 public class Profesor {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generador")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generadorProfe")
     @GenericGenerator(
-            name = "generador",
+            name = "generadorProfe",
             strategy = "com.bosonit.backend.utils.StringPrefixedSequenceIdGenerator",
             parameters = {
                     @Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
-                    @Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "AUS"),
-                    @Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%08d")
+                    @Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "PROF"),
+                    @Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%04d")
             })
     private String id_profesor;
 
@@ -31,7 +31,6 @@ public class Profesor {
     private String branch;
 
     // Relacion con tablas
-
 
     @OneToMany
     private List<Estudiante> estudiantes;
