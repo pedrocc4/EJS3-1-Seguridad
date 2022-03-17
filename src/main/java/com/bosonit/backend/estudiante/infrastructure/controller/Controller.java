@@ -2,16 +2,15 @@ package com.bosonit.backend.estudiante.infrastructure.controller;
 
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteInputDTO;
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteOutputDTO;
+import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudiantePersonaOutputDTO;
+import com.bosonit.backend.estudiante.infrastructure.exceptions.EstudianteNoEncontrado;
 import com.bosonit.backend.estudiante.service.EstudianteService;
 import com.bosonit.backend.persona.infrastructure.exceptions.UnprocesableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -31,5 +30,25 @@ public class Controller {
         } catch (UnprocesableException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "error", e);
         }
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("estudiante/{id}")
+    public ResponseEntity<EstudianteOutputDTO> getEstudiante(
+            @PathVariable String id,
+            @RequestParam(defaultValue = "simple") String outputType) {
+        log.info("Intentando buscar estudiante con id: " + id);
+        log.info("Valor outputType: " + outputType);
+        try {
+            if (outputType.equals("simple"))
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(service.getEstudiante(id));
+            else if (outputType.equals("full"))
+                throw new UnsupportedOperationException();
+            //FIXME arreglar
+        } catch (EstudianteNoEncontrado e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
+        }
+        return null;
     }
 }

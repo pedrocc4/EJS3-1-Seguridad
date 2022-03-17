@@ -3,6 +3,7 @@ package com.bosonit.backend.estudiante.service;
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteInputDTO;
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteOutputDTO;
 import com.bosonit.backend.estudiante.infrastructure.controller.mapper.EstudianteMapper;
+import com.bosonit.backend.estudiante.infrastructure.exceptions.EstudianteNoEncontrado;
 import com.bosonit.backend.estudiante.repository.EstudianteRepositoryJPA;
 import com.bosonit.backend.persona.infrastructure.exceptions.UnprocesableException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,8 @@ public class EstudianteServiceImpl implements EstudianteService {
     private EstudianteMapper mapper;
 
     @Override
-    public EstudianteOutputDTO addEstudiante(EstudianteInputDTO estudianteInputDTO) {
+    public EstudianteOutputDTO addEstudiante(EstudianteInputDTO estudianteInputDTO)
+            throws UnprocesableException {
         try {
             return mapper.toDTO(
                     repository.save(mapper.toEntity(estudianteInputDTO)));
@@ -32,8 +34,12 @@ public class EstudianteServiceImpl implements EstudianteService {
     }
 
     @Override
-    public EstudianteOutputDTO getEstudiante(String id) {
-        return null;
+    public EstudianteOutputDTO getEstudiante(String id)
+            throws EstudianteNoEncontrado {
+        return mapper.toDTO(repository
+                .findById(id)
+                .orElseThrow(() -> new EstudianteNoEncontrado
+                        ("Estudiante con id: " + id + ", no encontrado")));
     }
 
     @Override
