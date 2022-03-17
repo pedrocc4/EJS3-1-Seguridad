@@ -2,7 +2,6 @@ package com.bosonit.backend.estudiante.infrastructure.controller;
 
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteInputDTO;
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteOutputDTO;
-import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudiantePersonaOutputDTO;
 import com.bosonit.backend.estudiante.infrastructure.exceptions.EstudianteNoEncontrado;
 import com.bosonit.backend.estudiante.service.EstudianteService;
 import com.bosonit.backend.persona.infrastructure.exceptions.UnprocesableException;
@@ -50,5 +49,21 @@ public class Controller {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
         }
         return null;
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("estudiante/{id}")
+    public ResponseEntity<EstudianteOutputDTO> actEstudiante(
+            @PathVariable String id,
+            @RequestBody EstudianteInputDTO estudianteInputDTO
+    ) {
+        log.info("Intentando actualizar estudiante con id: " + id);
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.actEstudiante(id, estudianteInputDTO));
+        } catch (EstudianteNoEncontrado e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
+        } catch (UnprocesableException u) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "error", u);
+        }
     }
 }

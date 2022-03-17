@@ -43,9 +43,19 @@ public class EstudianteServiceImpl implements EstudianteService {
     }
 
     @Override
-    public void actEstudiante(String id, EstudianteInputDTO estudianteInputDTO) {
+    public EstudianteOutputDTO actEstudiante(String id, EstudianteInputDTO estudianteInputDTO)
+            throws EstudianteNoEncontrado, UnprocesableException {
+        if (repository.findById(id).isEmpty())
+            throw new EstudianteNoEncontrado("Estudiante con id: " + id + ", no encontrado");
 
+        try {
+            estudianteInputDTO.setId_estudiante(id);
+            return mapper.toDTO(repository.save(mapper.toEntity(estudianteInputDTO)));
+        } catch (ConstraintViolationException e) {
+            throw new UnprocesableException(e.getMessage());
+        }
     }
+
 
     @Override
     public void delEstudiante(String id) {
