@@ -1,5 +1,6 @@
 package com.bosonit.backend.profesor.infrastructure.controller;
 
+import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteInputDTO;
 import com.bosonit.backend.profesor.infrastructure.controller.dto.ProfesorInputDTO;
 import com.bosonit.backend.profesor.infrastructure.controller.dto.ProfesorOutputDTO;
 import com.bosonit.backend.profesor.service.ProfesorService;
@@ -44,6 +45,19 @@ public class ProfesorController {
             return ResponseEntity.status(HttpStatus.CREATED).body(service.addProfesor(profesorInputDTO));
         } catch (UnprocesableException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "error", e);
+        }
+    }
+
+    @PostMapping("profesor/{id}/estudiantes")
+    @ResponseStatus(HttpStatus.OK)
+    private ResponseEntity<ProfesorOutputDTO> addEstudiantes(
+            @PathVariable String id,
+            @RequestBody List<String> ids_estudiantes) {
+        try {
+            log.info("Intentando agregar estudiantes: " + ids_estudiantes);
+            return ResponseEntity.status(HttpStatus.OK).body(service.addEstudiantes(id, ids_estudiantes));
+        } catch (ProfesorNoEncontrado e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
         }
     }
 

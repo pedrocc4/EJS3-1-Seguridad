@@ -2,6 +2,7 @@ package com.bosonit.backend.estudiante.infrastructure.controller;
 
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteInputDTO;
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteOutputDTO;
+import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudiantePersonaOutputDTO;
 import com.bosonit.backend.estudiante.service.EstudianteService;
 import com.bosonit.backend.utils.exceptions.EstudianteNoEncontrado;
 import com.bosonit.backend.utils.exceptions.UnprocesableException;
@@ -33,7 +34,7 @@ public class Controller {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("estudiante/{id}")
-    public ResponseEntity<EstudianteOutputDTO> getEstudiante(
+    public ResponseEntity<Object> getEstudiante(
             @PathVariable String id,
             @RequestParam(defaultValue = "simple") String outputType) {
         log.info("Intentando buscar estudiante con id: " + id);
@@ -43,8 +44,8 @@ public class Controller {
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(service.getEstudiante(id));
             else if (outputType.equals("full"))
-                throw new UnsupportedOperationException();
-            //FIXME arreglar
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(service.getEstudiante2(id));
         } catch (EstudianteNoEncontrado e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
         }

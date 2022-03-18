@@ -1,5 +1,6 @@
 package com.bosonit.backend.estudiante.domain;
 
+import com.bosonit.backend.asignatura.domain.Asignatura;
 import com.bosonit.backend.persona.domain.Persona;
 import com.bosonit.backend.utils.StringPrefixedSequenceIdGenerator;
 import lombok.Data;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -35,15 +37,18 @@ public class Estudiante {
 
     // Relacion con tablas
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private Persona id_persona;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "id_profesor")
-//    private Profesor profesor;
-//
-//    @OneToMany(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "estudiante_asignatura")
-//    private List<Estudiante_asignatura> asignaturas;
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    }) // sin REMOVE (eliminar asignatura y no estudiantes)
+    @JoinTable(
+            name = "ESTUDIANTE_ASIGNATURA",
+            joinColumns = {@JoinColumn(name = "id_estudiante")},
+            inverseJoinColumns = {@JoinColumn(name = "id_asignatura")}
+    )
+    private Set<Asignatura> asignaturas;
 
 }
