@@ -6,6 +6,7 @@ import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteOu
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudiantePersonaOutputDTO;
 import com.bosonit.backend.estudiante.infrastructure.controller.mapper.EstudianteMapper;
 import com.bosonit.backend.estudiante.repository.EstudianteRepositoryJPA;
+import com.bosonit.backend.persona.domain.Persona;
 import com.bosonit.backend.persona.repository.PersonaRepositoryJPA;
 import com.bosonit.backend.utils.exceptions.EstudianteNoEncontrado;
 import com.bosonit.backend.utils.exceptions.PersonaNoEncontrada;
@@ -36,13 +37,16 @@ public class EstudianteServiceImpl implements EstudianteService {
         try {
             //FIXME tiene que haber otra forma
             Estudiante estudiante = mapper.toEntity(estudianteInputDTO);
-            estudiante.setId_persona(
-                    personaRepository.findById(estudianteInputDTO.getId_persona().getId())
-                            .orElseThrow(
-                                    () -> new PersonaNoEncontrada(
-                                            "Persona con id: "
-                                                    + estudianteInputDTO.getId_persona()
-                                                    + ", no encontrada")));
+
+            Persona persona = personaRepository.findById(estudianteInputDTO.getId_persona().getId())
+                    .orElseThrow(
+                            () -> new PersonaNoEncontrada(
+                                    "Persona con id: "
+                                            + estudianteInputDTO.getId_persona()
+                                            + ", no encontrada"));
+            persona.setTipoPersona(Persona.TipoPersona.ESTUDIANTE);
+            personaRepository.save(persona);
+            estudiante.setId_persona(persona);
             return mapper.toDTO(
                     repository.save(estudiante));
         } catch (ConstraintViolationException c) {

@@ -2,12 +2,14 @@ package com.bosonit.backend.profesor.service;
 
 import com.bosonit.backend.estudiante.domain.Estudiante;
 import com.bosonit.backend.estudiante.repository.EstudianteRepositoryJPA;
+import com.bosonit.backend.persona.repository.PersonaRepositoryJPA;
 import com.bosonit.backend.profesor.domain.Profesor;
 import com.bosonit.backend.profesor.infrastructure.controller.dto.ProfesorInputDTO;
 import com.bosonit.backend.profesor.infrastructure.controller.dto.ProfesorOutputDTO;
 import com.bosonit.backend.profesor.infrastructure.controller.mapper.ProfesorMapper;
 import com.bosonit.backend.profesor.repository.ProfesorRepositoryJPA;
 import com.bosonit.backend.utils.exceptions.EstudianteNoEncontrado;
+import com.bosonit.backend.utils.exceptions.PersonaNoEncontrada;
 import com.bosonit.backend.utils.exceptions.ProfesorNoEncontrado;
 import com.bosonit.backend.utils.exceptions.UnprocesableException;
 import org.springframework.beans.BeanUtils;
@@ -30,9 +32,20 @@ public class ProfesorServiceImpl implements ProfesorService {
     @Autowired
     private EstudianteRepositoryJPA estudianteRepository;
 
+    @Autowired
+    private PersonaRepositoryJPA personaRepository;
+
     @Override
     public ProfesorOutputDTO addProfesor(ProfesorInputDTO profesorInputDTO) {
         try {//FIXME que pasa si agregamos estudiantes
+            Profesor profesor = mapper.toEntity(profesorInputDTO);
+            profesor.setId_persona(
+                    personaRepository.findById(profesorInputDTO.getId_persona().getId())
+                            .orElseThrow(
+                                    () -> new PersonaNoEncontrada(
+                                            "Persona con id: "
+                                                    + profesorInputDTO.getId_persona()
+                                                    + ", no encontrada")));
             return mapper.toDTO(repository.save(mapper.toEntity(profesorInputDTO)));
         } catch (ConstraintViolationException e) {
             throw new UnprocesableException(e.getMessage());

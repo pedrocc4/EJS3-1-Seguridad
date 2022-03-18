@@ -1,5 +1,6 @@
 package com.bosonit.backend.persona.infrastructure.controller.dto.output;
 
+import com.bosonit.backend.persona.domain.Persona;
 import lombok.Data;
 
 import java.util.Date;
@@ -18,4 +19,5 @@ public class PersonaOutputDTO {
     private Date created_date;
     private String imagen_url;
     private Date termination_date;
+    private Persona.TipoPersona tipoPersona;
 }

@@ -1,6 +1,7 @@
 package com.bosonit.backend.profesor.domain;
 
 import com.bosonit.backend.estudiante.domain.Estudiante;
+import com.bosonit.backend.persona.domain.Persona;
 import com.bosonit.backend.utils.StringPrefixedSequenceIdGenerator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,9 @@ public class Profesor {
     private String branch;
 
     // Relacion con tablas
+
+    @OneToOne
+    private Persona id_persona;
 
     @OneToMany
     private List<Estudiante> estudiantes;
