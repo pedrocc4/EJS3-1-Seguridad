@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "com.bosonit.backend.persona",
         "com.bosonit.backend.estudiante",
         "com.bosonit.backend.profesor",
+        "com.bosonit.backend.asignatura",
         "com.bosonit.backend.utils"
 })
 @EntityScan(basePackages = {
@@ -21,7 +22,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories({
         "com.bosonit.backend.persona.repository",
         "com.bosonit.backend.estudiante.repository",
-        "com.bosonit.backend.profesor.repository"
+        "com.bosonit.backend.profesor.repository",
+        "com.bosonit.backend.asignatura.repository"
 })
 public class EscuelaApp {
 

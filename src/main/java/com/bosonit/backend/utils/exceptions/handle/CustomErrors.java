@@ -47,4 +47,11 @@ public class CustomErrors extends ResponseEntityExceptionHandler {
                 request.getDescription(false), HttpStatus.NOT_ACCEPTABLE.getReasonPhrase());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_ACCEPTABLE);
     }
+
+    @ExceptionHandler(AsignaturaNoEncontrada.class)
+    public final ResponseEntity<ExceptionResponse> handleNotFoundException(AsignaturaNoEncontrada ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
+                request.getDescription(false), HttpStatus.NOT_ACCEPTABLE.getReasonPhrase());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_ACCEPTABLE);
+    }
 }

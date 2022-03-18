@@ -16,14 +16,14 @@ import javax.persistence.Id;
 @Entity
 public class Asignatura {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generador")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generadorAsg")
     @GenericGenerator(
-            name = "generador",
+            name = "generadorAsg",
             strategy = "com.bosonit.backend.utils.StringPrefixedSequenceIdGenerator",
             parameters = {
                     @Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
-                    @Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "AUS"),
-                    @Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%08d")
+                    @Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "ASG"),
+                    @Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d")
             })
     private String id_asignatura;
 
