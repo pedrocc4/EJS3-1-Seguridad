@@ -1,6 +1,6 @@
 package com.bosonit.backend.estudiante.domain;
 
-import com.bosonit.backend.asignatura.domain.Asignatura;
+import com.bosonit.backend.estudiante_asignatura.domain.Estudiante_Asignatura;
 import com.bosonit.backend.persona.domain.Persona;
 import com.bosonit.backend.utils.StringPrefixedSequenceIdGenerator;
 import lombok.Data;
@@ -10,7 +10,7 @@ import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -40,15 +40,18 @@ public class Estudiante {
     @OneToOne(fetch = FetchType.LAZY)
     private Persona id_persona;
 
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    }) // sin REMOVE (eliminar asignatura y no estudiantes)
-    @JoinTable(
-            name = "ESTUDIANTE_ASIGNATURA",
-            joinColumns = {@JoinColumn(name = "id_estudiante")},
-            inverseJoinColumns = {@JoinColumn(name = "id_asignatura")}
-    )
-    private Set<Asignatura> asignaturas;
+//    @ManyToMany(cascade = {
+//            CascadeType.PERSIST,
+//            CascadeType.MERGE,
+//    }, // sin REMOVE (eliminar asignatura y no estudiantes)
+//            fetch = FetchType.LAZY
+//    )
+//    @JoinTable(
+//            name = "ESTUDIANTE_ASIGNATURA",
+//            joinColumns = {@JoinColumn(name = "id_estudiante")},
+//            inverseJoinColumns = {@JoinColumn(name = "id_asignatura")}
+//    )
+    @OneToMany(mappedBy = "id_estudiante")
+    private List<Estudiante_Asignatura> estudiante_asignatura;
 
 }

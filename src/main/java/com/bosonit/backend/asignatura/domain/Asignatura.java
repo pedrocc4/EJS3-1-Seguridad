@@ -1,6 +1,6 @@
 package com.bosonit.backend.asignatura.domain;
 
-import com.bosonit.backend.estudiante.domain.Estudiante;
+import com.bosonit.backend.estudiante_asignatura.domain.Estudiante_Asignatura;
 import com.bosonit.backend.utils.StringPrefixedSequenceIdGenerator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -31,6 +31,9 @@ public class Asignatura {
 
     // Relacion con tablas
 
-    @ManyToMany//(mappedBy = "asignaturas")
-    private Set<Estudiante> estudiantes;
+//    @ManyToMany(mappedBy = "asignaturas")
+//    private List<Estudiante> estudiantes;
+
+    @OneToMany(mappedBy = "id_asignatura")
+    private List<Estudiante_Asignatura> estudiante_asignatura;
 }

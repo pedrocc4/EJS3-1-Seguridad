@@ -2,7 +2,6 @@ package com.bosonit.backend.estudiante.infrastructure.controller;
 
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteInputDTO;
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteOutputDTO;
-import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudiantePersonaOutputDTO;
 import com.bosonit.backend.estudiante.service.EstudianteService;
 import com.bosonit.backend.utils.exceptions.EstudianteNoEncontrado;
 import com.bosonit.backend.utils.exceptions.UnprocesableException;
@@ -13,9 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 @Slf4j
-public class Controller {
+public class EstudianteController {
     @Autowired
     private EstudianteService service;
 
@@ -80,6 +81,21 @@ public class Controller {
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (EstudianteNoEncontrado e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
+        }
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("estudiante/{id}/asignaturas") // FIXME post? put? patch?
+    public ResponseEntity<EstudianteOutputDTO> addAsignaturas(
+            @PathVariable String id,
+            @RequestBody List<String> idsAsignaturas) {
+        log.info("Intentando agregar a estudiante con id: " + id + " asignaturas con id: " + idsAsignaturas);
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.addAsignaturas(id, idsAsignaturas));
+        } catch (EstudianteNoEncontrado e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
+        } catch (UnprocesableException u) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "error", u);
         }
     }
 }

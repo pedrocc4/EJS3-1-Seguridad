@@ -25,4 +25,11 @@ public interface AsignaturaMapper {
         return Asignaturas.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
+    default List<Asignatura> toEntityList(@Valid List<AsignaturaInputDTO> asignaturaInputDTOS) {
+        if (asignaturaInputDTOS == null) {
+            return new ArrayList<>();
+        }
+        return asignaturaInputDTOS.stream().map(this::toEntity).collect(Collectors.toList());
+    }
+
 }
