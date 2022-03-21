@@ -1,9 +1,9 @@
 package com.bosonit.backend.estudiante.infrastructure.controller.mapper;
 
 import com.bosonit.backend.estudiante.domain.Estudiante;
-import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteInputDTO;
-import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteOutputDTO;
-import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudiantePersonaOutputDTO;
+import com.bosonit.backend.estudiante.infrastructure.controller.dto.input.EstudianteInputDTO;
+import com.bosonit.backend.estudiante.infrastructure.controller.dto.output.EstudianteOutputDTO;
+import com.bosonit.backend.estudiante.infrastructure.controller.dto.output.EstudiantePersonaOutputDTO;
 import org.mapstruct.Mapper;
 import org.springframework.validation.annotation.Validated;
 
@@ -29,10 +29,18 @@ public interface EstudianteMapper {
         return estudiantes.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
+    default List<EstudiantePersonaOutputDTO> toDTOList1(@Valid List<Estudiante> estudiantes) {
+        if (estudiantes == null) {
+            return new ArrayList<>();
+        }
+        return estudiantes.stream().map(this::toDTO2).collect(Collectors.toList());
+    }
+
     default List<Estudiante> toEntityList(@Valid List<EstudianteInputDTO> estudiantes) {
         if (estudiantes == null) {
             return new ArrayList<>();
         }
         return estudiantes.stream().map(this::toEntity).collect(Collectors.toList());
     }
+
 }

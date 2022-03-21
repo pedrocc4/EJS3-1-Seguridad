@@ -1,10 +1,8 @@
 package com.bosonit.backend.estudiante.service;
 
-import com.bosonit.backend.asignatura.infrastructure.controller.dto.AsignaturaInputDTO;
-import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteInputDTO;
-import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteOutputDTO;
-import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudiantePersonaOutputDTO;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.bosonit.backend.estudiante.infrastructure.controller.dto.input.EstudianteInputDTO;
+import com.bosonit.backend.estudiante.infrastructure.controller.dto.output.EstudianteOutputDTO;
+import com.bosonit.backend.estudiante.infrastructure.controller.dto.output.EstudiantePersonaOutputDTO;
 
 import java.util.List;
 
@@ -20,6 +18,8 @@ public interface EstudianteService {
     void delEstudiante(String id);
 
     List<EstudianteOutputDTO> getEstudiantes();
+
+    List<EstudiantePersonaOutputDTO> getEstudiantes1();
 
     EstudianteOutputDTO addAsignaturas(String id, List<String> idsAsignaturas);
 }

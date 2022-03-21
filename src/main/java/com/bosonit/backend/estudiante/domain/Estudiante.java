@@ -37,7 +37,7 @@ public class Estudiante {
 
     // Relacion con tablas
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     private Persona id_persona;
 
 //    @ManyToMany(cascade = {

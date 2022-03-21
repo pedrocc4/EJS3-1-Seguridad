@@ -1,4 +1,4 @@
-package com.bosonit.backend.estudiante.infrastructure.controller.dto;
+package com.bosonit.backend.profesor.infrastructure.controller.dto.output;
 
 import com.bosonit.backend.persona.domain.Persona;
 import lombok.Data;
@@ -6,6 +6,6 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class EstudiantePersonaOutputDTO extends EstudianteOutputDTO {
+public class ProfesorPersonaOutputDTO extends ProfesorOutputDTO {
     private Persona id_persona;
 }

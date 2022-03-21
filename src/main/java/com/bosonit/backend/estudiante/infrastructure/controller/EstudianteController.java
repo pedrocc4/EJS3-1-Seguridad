@@ -1,7 +1,7 @@
 package com.bosonit.backend.estudiante.infrastructure.controller;
 
-import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteInputDTO;
-import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteOutputDTO;
+import com.bosonit.backend.estudiante.infrastructure.controller.dto.input.EstudianteInputDTO;
+import com.bosonit.backend.estudiante.infrastructure.controller.dto.output.EstudianteOutputDTO;
 import com.bosonit.backend.estudiante.service.EstudianteService;
 import com.bosonit.backend.utils.exceptions.EstudianteNoEncontrado;
 import com.bosonit.backend.utils.exceptions.UnprocesableException;
@@ -31,6 +31,18 @@ public class EstudianteController {
         } catch (UnprocesableException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "error", e);
         }
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("estudiantes")
+    public ResponseEntity<Object> getEstudiantes(
+            @RequestParam(defaultValue = "simple") String outputType) {
+        log.info("Buscando a todos los estudiantes, tipo: " + outputType);
+        if (outputType.equals("simple"))
+            return ResponseEntity.status(HttpStatus.OK).body(service.getEstudiantes());
+        else if (outputType.equals("full"))
+            return ResponseEntity.status(HttpStatus.OK).body(service.getEstudiantes1());
+        return ResponseEntity.status(HttpStatus.OK).body(service.getEstudiantes());
     }
 
     @ResponseStatus(HttpStatus.OK)

@@ -33,7 +33,7 @@ public class Profesor {
 
     // Relacion con tablas
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private Persona id_persona;
 
     @OneToMany

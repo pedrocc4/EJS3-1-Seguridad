@@ -1,9 +1,8 @@
 package com.bosonit.backend.profesor.service;
 
-import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteInputDTO;
-import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteOutputDTO;
-import com.bosonit.backend.profesor.infrastructure.controller.dto.ProfesorInputDTO;
-import com.bosonit.backend.profesor.infrastructure.controller.dto.ProfesorOutputDTO;
+import com.bosonit.backend.profesor.infrastructure.controller.dto.input.ProfesorInputDTO;
+import com.bosonit.backend.profesor.infrastructure.controller.dto.output.ProfesorOutputDTO;
+import com.bosonit.backend.profesor.infrastructure.controller.dto.output.ProfesorPersonaOutputDTO;
 
 import java.util.List;
 
@@ -14,9 +13,13 @@ public interface ProfesorService {
 
     ProfesorOutputDTO getProfesor(String id);
 
+    ProfesorPersonaOutputDTO getProfesor1(String id);
+
     ProfesorOutputDTO actProfesor(String id, ProfesorInputDTO profesorInputDTO);
 
     void delProfesor(String id);
 
     List<ProfesorOutputDTO> getProfesores();
+
+    List<ProfesorPersonaOutputDTO> getProfesores1();
 }

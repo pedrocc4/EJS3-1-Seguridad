@@ -3,7 +3,6 @@ package com.bosonit.backend.persona.domain;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -14,7 +13,7 @@ import java.util.Date;
 @Entity
 @Data
 @NoArgsConstructor
-public class Persona { //TODO una persona solo puede ser o estudiante o profesor
+public class Persona {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -54,8 +53,10 @@ public class Persona { //TODO una persona solo puede ser o estudiante o profesor
     private Date termination_date;
 
     // @Transient
+    @Column(unique = true, updatable = false, insertable = false)
     private TipoPersona tipoPersona;
 
+    //TODO una persona solo puede ser o estudiante o profesor ¿solución?
     @Getter
     public
     enum TipoPersona {

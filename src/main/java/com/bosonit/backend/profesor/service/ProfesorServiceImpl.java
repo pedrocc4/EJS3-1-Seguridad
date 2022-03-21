@@ -2,10 +2,12 @@ package com.bosonit.backend.profesor.service;
 
 import com.bosonit.backend.estudiante.domain.Estudiante;
 import com.bosonit.backend.estudiante.repository.EstudianteRepositoryJPA;
+import com.bosonit.backend.persona.domain.Persona;
 import com.bosonit.backend.persona.repository.PersonaRepositoryJPA;
 import com.bosonit.backend.profesor.domain.Profesor;
-import com.bosonit.backend.profesor.infrastructure.controller.dto.ProfesorInputDTO;
-import com.bosonit.backend.profesor.infrastructure.controller.dto.ProfesorOutputDTO;
+import com.bosonit.backend.profesor.infrastructure.controller.dto.input.ProfesorInputDTO;
+import com.bosonit.backend.profesor.infrastructure.controller.dto.output.ProfesorOutputDTO;
+import com.bosonit.backend.profesor.infrastructure.controller.dto.output.ProfesorPersonaOutputDTO;
 import com.bosonit.backend.profesor.infrastructure.controller.mapper.ProfesorMapper;
 import com.bosonit.backend.profesor.repository.ProfesorRepositoryJPA;
 import com.bosonit.backend.utils.exceptions.EstudianteNoEncontrado;
@@ -39,13 +41,16 @@ public class ProfesorServiceImpl implements ProfesorService {
     public ProfesorOutputDTO addProfesor(ProfesorInputDTO profesorInputDTO) {
         try {//FIXME que pasa si agregamos estudiantes
             Profesor profesor = mapper.toEntity(profesorInputDTO);
-            profesor.setId_persona(
+            Persona persona =
                     personaRepository.findById(profesorInputDTO.getId_persona().getId())
                             .orElseThrow(
                                     () -> new PersonaNoEncontrada(
                                             "Persona con id: "
                                                     + profesorInputDTO.getId_persona()
-                                                    + ", no encontrada")));
+                                                    + ", no encontrada"));
+            profesor.setId_persona(persona);
+            persona.setTipoPersona(Persona.TipoPersona.PROFESOR);
+            personaRepository.save(persona);
             return mapper.toDTO(repository.save(mapper.toEntity(profesorInputDTO)));
         } catch (ConstraintViolationException e) {
             throw new UnprocesableException(e.getMessage());
@@ -74,6 +79,12 @@ public class ProfesorServiceImpl implements ProfesorService {
     }
 
     @Override
+    public ProfesorPersonaOutputDTO getProfesor1(String id) {
+        return mapper.toDTO1(repository.findById(id)
+                .orElseThrow(() -> new ProfesorNoEncontrado("Profesor con id: " + id + ", no encontrado")));
+    }
+
+    @Override
     public ProfesorOutputDTO actProfesor(String id, ProfesorInputDTO profesorInputDTO) {
         try {
             Profesor profesor = repository.findById(id)
@@ -95,5 +106,8 @@ public class ProfesorServiceImpl implements ProfesorService {
     @Override
     public List<ProfesorOutputDTO> getProfesores() {
         return mapper.toDTOList(repository.findAll());
+    }
+    public List<ProfesorPersonaOutputDTO> getProfesores1() {
+        return mapper.toDTOList1(repository.findAll());
     }
 }

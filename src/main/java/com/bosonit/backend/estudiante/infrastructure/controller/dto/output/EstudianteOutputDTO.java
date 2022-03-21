@@ -1,4 +1,4 @@
-package com.bosonit.backend.estudiante.infrastructure.controller.dto;
+package com.bosonit.backend.estudiante.infrastructure.controller.dto.output;
 
 import com.bosonit.backend.asignatura.domain.Asignatura;
 import lombok.Data;

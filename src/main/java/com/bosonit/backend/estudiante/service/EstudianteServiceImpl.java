@@ -3,9 +3,9 @@ package com.bosonit.backend.estudiante.service;
 import com.bosonit.backend.asignatura.domain.Asignatura;
 import com.bosonit.backend.asignatura.repository.AsignaturaRepositoryJPA;
 import com.bosonit.backend.estudiante.domain.Estudiante;
-import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteInputDTO;
-import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteOutputDTO;
-import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudiantePersonaOutputDTO;
+import com.bosonit.backend.estudiante.infrastructure.controller.dto.input.EstudianteInputDTO;
+import com.bosonit.backend.estudiante.infrastructure.controller.dto.output.EstudianteOutputDTO;
+import com.bosonit.backend.estudiante.infrastructure.controller.dto.output.EstudiantePersonaOutputDTO;
 import com.bosonit.backend.estudiante.infrastructure.controller.mapper.EstudianteMapper;
 import com.bosonit.backend.estudiante.repository.EstudianteRepositoryJPA;
 import com.bosonit.backend.estudiante_asignatura.service.Estudiante_AsignaturaService;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -117,6 +116,11 @@ public class EstudianteServiceImpl implements EstudianteService {
     }
 
     @Override
+    public List<EstudiantePersonaOutputDTO> getEstudiantes1() {
+        return mapper.toDTOList1(repository.findAll());
+    }
+
+    @Override
     public EstudianteOutputDTO addAsignaturas(String id, List<String> idsAsignaturas) {
         try {
             Estudiante estudiante = repository.findById(id)
@@ -131,7 +135,7 @@ public class EstudianteServiceImpl implements EstudianteService {
                                     "Asignatura con id: " + id + ", no encontrada"))).toList();
             //estudiante.setAsignaturas(asignaturas);
             asignaturas.forEach(asignatura -> service.addEstudiante_Asignatura(estudiante, asignatura));
-           // estudiante.setEstudiante_asignatura(asignaturas);
+            // estudiante.setEstudiante_asignatura(asignaturas);
             //FIXME agregar a estudiante, -> asignaturas
             log.info("aqui?");
             return mapper.toDTO(repository.save(estudiante));

@@ -1,8 +1,7 @@
 package com.bosonit.backend.profesor.infrastructure.controller;
 
-import com.bosonit.backend.estudiante.infrastructure.controller.dto.EstudianteInputDTO;
-import com.bosonit.backend.profesor.infrastructure.controller.dto.ProfesorInputDTO;
-import com.bosonit.backend.profesor.infrastructure.controller.dto.ProfesorOutputDTO;
+import com.bosonit.backend.profesor.infrastructure.controller.dto.input.ProfesorInputDTO;
+import com.bosonit.backend.profesor.infrastructure.controller.dto.output.ProfesorOutputDTO;
 import com.bosonit.backend.profesor.service.ProfesorService;
 import com.bosonit.backend.utils.exceptions.ProfesorNoEncontrado;
 import com.bosonit.backend.utils.exceptions.UnprocesableException;
@@ -23,18 +22,35 @@ public class ProfesorController {
 
     @GetMapping("profesor/{id}")
     @ResponseStatus(HttpStatus.OK)
-    private ProfesorOutputDTO getProfesor(@PathVariable String id) {
+    private ResponseEntity<Object> getProfesor(
+            @PathVariable String id,
+            @RequestParam(defaultValue = "simple") String outputType) {
         try {
-            return service.getProfesor(id);
+            log.info("Intentando encontrar profesor con id: " + id);
+            log.info("Tipo respuesta: " + outputType);
+            if (outputType.equals("simple"))
+                return ResponseEntity.status(HttpStatus.OK).body(service.getProfesor(id));
+            else if (outputType.equals("full")) {
+                log.info("ha ejecutado full");
+                return ResponseEntity.status(HttpStatus.OK).body(service.getProfesor1(id));
+            }
         } catch (ProfesorNoEncontrado e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
-        }
+        } // no es necesario, pero para que no salte error
+        return ResponseEntity.status(HttpStatus.OK).body(service.getProfesor(id));
     }
 
     @GetMapping("profesores")
     @ResponseStatus(HttpStatus.OK)
-    private List<ProfesorOutputDTO> getProfesores() {
-        return service.getProfesores();
+    private ResponseEntity<Object> getProfesores(
+            @RequestParam(defaultValue = "simple") String outputType) {
+        log.info("Buscando a todos los profesores, tipo: " + outputType);
+        if (outputType.equals("simple"))
+            return ResponseEntity.status(HttpStatus.OK).body(service.getProfesores());
+        else if (outputType.equals("full"))
+            return ResponseEntity.status(HttpStatus.OK).body(service.getProfesores1());
+
+        return ResponseEntity.status(HttpStatus.OK).body(service.getProfesores());
     }
 
     @PostMapping("profesor")
