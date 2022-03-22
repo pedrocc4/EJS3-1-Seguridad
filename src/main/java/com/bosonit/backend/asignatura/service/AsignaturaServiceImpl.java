@@ -54,7 +54,8 @@ public class AsignaturaServiceImpl implements AsignaturaService {
 
     @Override
     public void delAsignatura(String id) {
-
+        repository.delete(repository.findById(id)
+                .orElseThrow(() -> new AsignaturaNoEncontrada("Asignatura con id: " + id + ", no encontrada")));
     }
 
     @Override
