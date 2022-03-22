@@ -22,4 +22,6 @@ public interface ProfesorService {
     List<ProfesorOutputDTO> getProfesores();
 
     List<ProfesorPersonaOutputDTO> getProfesores1();
+
+    ProfesorPersonaOutputDTO addPersona(String id_profesor, int id_persona);
 }

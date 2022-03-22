@@ -41,16 +41,16 @@ public class ProfesorServiceImpl implements ProfesorService {
     public ProfesorOutputDTO addProfesor(ProfesorInputDTO profesorInputDTO) {
         try {//FIXME que pasa si agregamos estudiantes
             Profesor profesor = mapper.toEntity(profesorInputDTO);
-            Persona persona =
-                    personaRepository.findById(profesorInputDTO.getId_persona().getId())
-                            .orElseThrow(
-                                    () -> new PersonaNoEncontrada(
-                                            "Persona con id: "
-                                                    + profesorInputDTO.getId_persona()
-                                                    + ", no encontrada"));
-            profesor.setId_persona(persona);
-            persona.setTipoPersona(Persona.TipoPersona.PROFESOR);
-            personaRepository.save(persona);
+//            Persona persona =
+//                    personaRepository.findById(profesorInputDTO.getId_persona().getId())
+//                            .orElseThrow(
+//                                    () -> new PersonaNoEncontrada(
+//                                            "Persona con id: "
+//                                                    + profesorInputDTO.getId_persona()
+//                                                    + ", no encontrada"));
+            //profesor.setId_persona(persona);
+            //persona.setTipoPersona(Persona.TipoPersona.PROFESOR);
+            //personaRepository.save(persona);
             return mapper.toDTO(repository.save(mapper.toEntity(profesorInputDTO)));
         } catch (ConstraintViolationException e) {
             throw new UnprocesableException(e.getMessage());
@@ -107,7 +107,22 @@ public class ProfesorServiceImpl implements ProfesorService {
     public List<ProfesorOutputDTO> getProfesores() {
         return mapper.toDTOList(repository.findAll());
     }
+
     public List<ProfesorPersonaOutputDTO> getProfesores1() {
         return mapper.toDTOList1(repository.findAll());
+    }
+
+
+    @Override
+    public ProfesorPersonaOutputDTO addPersona(String id_profesor, int id_persona) {
+        Profesor profesor = repository.findById(id_profesor)
+                .orElseThrow(() -> new ProfesorNoEncontrado("Profesor con id: " + id_profesor + ", no encontrado"));
+
+        Persona persona = personaRepository.findById(id_persona)
+                .orElseThrow(() -> new ProfesorNoEncontrado("Persona con id: " + id_persona + ", no encontrada"));
+
+        profesor.setId_persona(persona);
+
+        return mapper.toDTO1(repository.save(profesor));
     }
 }

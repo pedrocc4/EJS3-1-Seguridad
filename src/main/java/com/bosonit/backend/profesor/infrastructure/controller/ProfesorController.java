@@ -2,7 +2,9 @@ package com.bosonit.backend.profesor.infrastructure.controller;
 
 import com.bosonit.backend.profesor.infrastructure.controller.dto.input.ProfesorInputDTO;
 import com.bosonit.backend.profesor.infrastructure.controller.dto.output.ProfesorOutputDTO;
+import com.bosonit.backend.profesor.infrastructure.controller.dto.output.ProfesorPersonaOutputDTO;
 import com.bosonit.backend.profesor.service.ProfesorService;
+import com.bosonit.backend.utils.exceptions.PersonaNoEncontrada;
 import com.bosonit.backend.utils.exceptions.ProfesorNoEncontrado;
 import com.bosonit.backend.utils.exceptions.UnprocesableException;
 import lombok.extern.slf4j.Slf4j;
@@ -77,6 +79,8 @@ public class ProfesorController {
         }
     }
 
+    @GetMapping
+
     @PutMapping("profesor/{id}")
     @ResponseStatus(HttpStatus.OK)
     private ResponseEntity<ProfesorOutputDTO> actProfesor(
@@ -99,6 +103,18 @@ public class ProfesorController {
             service.delProfesor(id);
             return ResponseEntity.ok().build();
         } catch (ProfesorNoEncontrado e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
+        }
+    }
+
+    @PutMapping("profesor/{id}/persona") // FIXME post, put, patch?
+    @ResponseStatus(HttpStatus.OK)
+    private ResponseEntity<ProfesorPersonaOutputDTO> addPersona(
+            @PathVariable(name = "id") String id_profesor,
+            @RequestParam(name = "persona") int id_persona) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.addPersona(id_profesor, id_persona));
+        } catch (ProfesorNoEncontrado | PersonaNoEncontrada e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
         }
     }
