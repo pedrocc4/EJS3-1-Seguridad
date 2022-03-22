@@ -3,6 +3,7 @@ package com.bosonit.backend.app;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = {
@@ -28,6 +29,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "com.bosonit.backend.asignatura.repository",
         "com.bosonit.backend.estudiante_asignatura.repository"
 })
+@EnableFeignClients
+       ({"com.bosonit.backend.app.feign"})
 public class EscuelaApp {
 
     public static void main(String[] args) {
