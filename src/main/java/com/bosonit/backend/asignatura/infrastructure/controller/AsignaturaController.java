@@ -35,4 +35,18 @@ public class AsignaturaController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
         }
     }
+
+    @PutMapping("asignatura/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    private ResponseEntity<AsignaturaOutputDTO> actAsignatura(
+            @PathVariable String id,
+            @RequestBody AsignaturaInputDTO asignaturaInputDTO) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.actAsignatura(id, asignaturaInputDTO));
+        } catch (AsignaturaNoEncontrada e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
+        } catch (UnprocesableException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "error", e);
+        }
+    }
 }

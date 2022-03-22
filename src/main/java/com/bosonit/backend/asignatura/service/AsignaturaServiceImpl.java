@@ -1,11 +1,14 @@
 package com.bosonit.backend.asignatura.service;
 
+import com.bosonit.backend.asignatura.domain.Asignatura;
 import com.bosonit.backend.asignatura.infrastructure.controller.dto.AsignaturaInputDTO;
 import com.bosonit.backend.asignatura.infrastructure.controller.dto.AsignaturaOutputDTO;
 import com.bosonit.backend.asignatura.infrastructure.controller.mapper.AsignaturaMapper;
 import com.bosonit.backend.asignatura.repository.AsignaturaRepositoryJPA;
 import com.bosonit.backend.utils.exceptions.AsignaturaNoEncontrada;
 import com.bosonit.backend.utils.exceptions.UnprocesableException;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +41,15 @@ public class AsignaturaServiceImpl implements AsignaturaService {
 
     @Override
     public AsignaturaOutputDTO actAsignatura(String id, AsignaturaInputDTO asignaturaInputDTO) {
-        return null;
+        Asignatura asignatura = repository.findById(id)
+                .orElseThrow(() -> new AsignaturaNoEncontrada("Asignatura con id: " + id + ", no encontrada"));
+
+        BeanUtils.copyProperties(asignaturaInputDTO, asignatura);
+        try {
+            return mapper.toDTO(repository.save(asignatura));
+        } catch (ConstraintViolationException e) {
+            throw new UnprocesableException(e.getMessage());
+        }
     }
 
     @Override
