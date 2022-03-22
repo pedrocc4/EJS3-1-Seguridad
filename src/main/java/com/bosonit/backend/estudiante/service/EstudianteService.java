@@ -22,4 +22,6 @@ public interface EstudianteService {
     List<EstudiantePersonaOutputDTO> getEstudiantes1();
 
     EstudianteOutputDTO addAsignaturas(String id, List<String> idsAsignaturas);
+
+    EstudiantePersonaOutputDTO addPersona(String id_estudiante, int id_persona);
 }

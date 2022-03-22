@@ -49,15 +49,17 @@ public class EstudianteServiceImpl implements EstudianteService {
             //FIXME tiene que haber otra forma
             Estudiante estudiante = mapper.toEntity(estudianteInputDTO);
             //FIXME comprobar si es estudiante o profe antes
-            Persona persona = personaRepository.findById(estudianteInputDTO.getId_persona().getId())
-                    .orElseThrow(
-                            () -> new PersonaNoEncontrada(
-                                    "Persona con id: "
-                                            + estudianteInputDTO.getId_persona()
-                                            + ", no encontrada"));
-            persona.setTipoPersona(Persona.TipoPersona.ESTUDIANTE);
-            personaRepository.save(persona);
-            estudiante.setId_persona(persona);
+            if (estudiante.getId_persona() != null) {
+                Persona persona = personaRepository.findById(estudianteInputDTO.getId_persona().getId())
+                        .orElseThrow(
+                                () -> new PersonaNoEncontrada(
+                                        "Persona con id: "
+                                                + estudianteInputDTO.getId_persona()
+                                                + ", no encontrada"));
+                persona.setTipoPersona(Persona.TipoPersona.ESTUDIANTE);
+                personaRepository.save(persona);
+                estudiante.setId_persona(persona);
+            }
             return mapper.toDTO(
                     repository.save(estudiante));
         } catch (ConstraintViolationException c) {
@@ -142,5 +144,16 @@ public class EstudianteServiceImpl implements EstudianteService {
         } catch (ConstraintViolationException e) {
             throw new UnprocesableException(e.getMessage());
         }
+    }
+
+    @Override
+    public EstudiantePersonaOutputDTO addPersona(String id_estudiante, int id_persona) {
+        Persona persona = personaRepository.findById(id_persona)
+                .orElseThrow(() -> new PersonaNoEncontrada("Persona con id: " + id_persona + ", no encontrada"));
+        Estudiante estudiante = repository.findById(id_estudiante)
+                .orElseThrow(() -> new EstudianteNoEncontrado("Estudiante con id: " + id_estudiante + ", no encontrado"));
+
+        estudiante.setId_persona(persona);
+        return mapper.toDTO2(repository.save(estudiante));
     }
 }

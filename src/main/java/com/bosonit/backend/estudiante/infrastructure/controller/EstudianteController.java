@@ -2,8 +2,10 @@ package com.bosonit.backend.estudiante.infrastructure.controller;
 
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.input.EstudianteInputDTO;
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.output.EstudianteOutputDTO;
+import com.bosonit.backend.estudiante.infrastructure.controller.dto.output.EstudiantePersonaOutputDTO;
 import com.bosonit.backend.estudiante.service.EstudianteService;
 import com.bosonit.backend.utils.exceptions.EstudianteNoEncontrado;
+import com.bosonit.backend.utils.exceptions.PersonaNoEncontrada;
 import com.bosonit.backend.utils.exceptions.UnprocesableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +28,7 @@ public class EstudianteController {
             @RequestBody EstudianteInputDTO estudianteInputDTO) {
         log.info("Intentando agregar a: " + estudianteInputDTO);
         try {
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(service.addEstudiante(estudianteInputDTO));
+            return ResponseEntity.status(HttpStatus.CREATED).body(service.addEstudiante(estudianteInputDTO));
         } catch (UnprocesableException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "error", e);
         }
@@ -38,10 +39,8 @@ public class EstudianteController {
     public ResponseEntity<Object> getEstudiantes(
             @RequestParam(defaultValue = "simple") String outputType) {
         log.info("Buscando a todos los estudiantes, tipo: " + outputType);
-        if (outputType.equals("simple"))
-            return ResponseEntity.status(HttpStatus.OK).body(service.getEstudiantes());
-        else if (outputType.equals("full"))
-            return ResponseEntity.status(HttpStatus.OK).body(service.getEstudiantes1());
+        if (outputType.equals("simple")) return ResponseEntity.status(HttpStatus.OK).body(service.getEstudiantes());
+        else if (outputType.equals("full")) return ResponseEntity.status(HttpStatus.OK).body(service.getEstudiantes1());
         return ResponseEntity.status(HttpStatus.OK).body(service.getEstudiantes());
     }
 
@@ -54,11 +53,9 @@ public class EstudianteController {
         log.info("Valor outputType: " + outputType);
         try {
             if (outputType.equals("simple"))
-                return ResponseEntity.status(HttpStatus.OK)
-                        .body(service.getEstudiante(id));
+                return ResponseEntity.status(HttpStatus.OK).body(service.getEstudiante(id));
             else if (outputType.equals("full"))
-                return ResponseEntity.status(HttpStatus.OK)
-                        .body(service.getEstudiante2(id));
+                return ResponseEntity.status(HttpStatus.OK).body(service.getEstudiante2(id));
         } catch (EstudianteNoEncontrado e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
         }
@@ -70,23 +67,21 @@ public class EstudianteController {
     //@PatchMapping -- para un campo en concreto
     public ResponseEntity<EstudianteOutputDTO> actEstudiante(
             @PathVariable String id,
-            @RequestBody EstudianteInputDTO estudianteInputDTO
-    ) throws Exception {
+            @RequestBody EstudianteInputDTO estudianteInputDTO) throws Exception {
         log.info("Intentando actualizar estudiante con id: " + id);
         try {
             return ResponseEntity.status(HttpStatus.OK).body(service.actEstudiante(id, estudianteInputDTO));
-        } catch (
-                EstudianteNoEncontrado e) {
+        } catch (EstudianteNoEncontrado e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
-        } catch (
-                UnprocesableException u) {
+        } catch (UnprocesableException u) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "error", u);
         }
     }
 
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("estudiante/{id}")
-    public ResponseEntity<Void> delEstudiante(@PathVariable String id) {
+    public ResponseEntity<Void> delEstudiante(
+            @PathVariable String id) {
         log.info("Intentando borrar estudiante con id: " + id);
         try {
             service.delEstudiante(id);
@@ -108,6 +103,19 @@ public class EstudianteController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
         } catch (UnprocesableException u) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "error", u);
+        }
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("estudiante/{id}/persona")
+    public ResponseEntity<EstudiantePersonaOutputDTO> addPersona(
+            @PathVariable(name = "id") String id_estudiante,
+            @RequestParam(name = "persona") int id_persona) {
+        log.info("Intentando agregar persona con id: " + id_persona + " a estudiante con id: " + id_estudiante);
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.addPersona(id_estudiante, id_persona));
+        } catch (PersonaNoEncontrada | EstudianteNoEncontrado e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
         }
     }
 }
