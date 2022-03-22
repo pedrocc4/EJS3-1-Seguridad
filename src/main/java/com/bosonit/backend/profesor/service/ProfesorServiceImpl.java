@@ -1,6 +1,8 @@
 package com.bosonit.backend.profesor.service;
 
 import com.bosonit.backend.estudiante.domain.Estudiante;
+import com.bosonit.backend.estudiante.infrastructure.controller.dto.output.EstudianteOutputDTO;
+import com.bosonit.backend.estudiante.infrastructure.controller.mapper.EstudianteMapper;
 import com.bosonit.backend.estudiante.repository.EstudianteRepositoryJPA;
 import com.bosonit.backend.persona.domain.Persona;
 import com.bosonit.backend.persona.repository.PersonaRepositoryJPA;
@@ -36,6 +38,9 @@ public class ProfesorServiceImpl implements ProfesorService {
 
     @Autowired
     private PersonaRepositoryJPA personaRepository;
+
+    @Autowired
+    private EstudianteMapper estudianteMapper;
 
     @Override
     public ProfesorOutputDTO addProfesor(ProfesorInputDTO profesorInputDTO) {
@@ -124,5 +129,10 @@ public class ProfesorServiceImpl implements ProfesorService {
         profesor.setId_persona(persona);
 
         return mapper.toDTO1(repository.save(profesor));
+    }
+
+    @Override
+    public List<EstudianteOutputDTO> getEstudiantes(String id) {
+        return estudianteMapper.toDTOList(repository.getEstudiantes(id));
     }
 }

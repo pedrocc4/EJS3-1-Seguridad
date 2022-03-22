@@ -1,5 +1,6 @@
 package com.bosonit.backend.profesor.infrastructure.controller;
 
+import com.bosonit.backend.estudiante.infrastructure.controller.dto.output.EstudianteOutputDTO;
 import com.bosonit.backend.profesor.infrastructure.controller.dto.input.ProfesorInputDTO;
 import com.bosonit.backend.profesor.infrastructure.controller.dto.output.ProfesorOutputDTO;
 import com.bosonit.backend.profesor.infrastructure.controller.dto.output.ProfesorPersonaOutputDTO;
@@ -11,9 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.xml.transform.OutputKeys;
 import java.util.List;
 
 @Slf4j
@@ -79,7 +82,12 @@ public class ProfesorController {
         }
     }
 
-    @GetMapping
+    @GetMapping("profesor/{id}/estudiantes")
+    @ResponseStatus(HttpStatus.OK)
+    private ResponseEntity<List<EstudianteOutputDTO> > getEstudiantes(
+            @PathVariable String id){
+        return ResponseEntity.status(HttpStatus.OK).body(service.getEstudiantes(id));
+    }
 
     @PutMapping("profesor/{id}")
     @ResponseStatus(HttpStatus.OK)

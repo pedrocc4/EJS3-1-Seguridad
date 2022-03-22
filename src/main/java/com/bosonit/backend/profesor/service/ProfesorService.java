@@ -1,5 +1,6 @@
 package com.bosonit.backend.profesor.service;
 
+import com.bosonit.backend.estudiante.infrastructure.controller.dto.output.EstudianteOutputDTO;
 import com.bosonit.backend.profesor.infrastructure.controller.dto.input.ProfesorInputDTO;
 import com.bosonit.backend.profesor.infrastructure.controller.dto.output.ProfesorOutputDTO;
 import com.bosonit.backend.profesor.infrastructure.controller.dto.output.ProfesorPersonaOutputDTO;
@@ -24,4 +25,6 @@ public interface ProfesorService {
     List<ProfesorPersonaOutputDTO> getProfesores1();
 
     ProfesorPersonaOutputDTO addPersona(String id_profesor, int id_persona);
+
+    List<EstudianteOutputDTO>  getEstudiantes(String id);
 }
