@@ -18,6 +18,7 @@ import com.bosonit.backend.utils.exceptions.ProfesorNoEncontrado;
 import com.bosonit.backend.utils.exceptions.UnprocesableException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
@@ -57,7 +58,7 @@ public class ProfesorServiceImpl implements ProfesorService {
             //persona.setTipoPersona(Persona.TipoPersona.PROFESOR);
             //personaRepository.save(persona);
             return mapper.toDTO(repository.save(mapper.toEntity(profesorInputDTO)));
-        } catch (ConstraintViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             throw new UnprocesableException(e.getMessage());
         }
     }

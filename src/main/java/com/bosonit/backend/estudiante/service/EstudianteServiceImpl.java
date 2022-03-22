@@ -16,8 +16,10 @@ import com.bosonit.backend.utils.exceptions.EstudianteNoEncontrado;
 import com.bosonit.backend.utils.exceptions.PersonaNoEncontrada;
 import com.bosonit.backend.utils.exceptions.UnprocesableException;
 import lombok.extern.slf4j.Slf4j;
+import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
@@ -62,7 +64,7 @@ public class EstudianteServiceImpl implements EstudianteService {
             }
             return mapper.toDTO(
                     repository.save(estudiante));
-        } catch (ConstraintViolationException c) {
+        } catch (DataIntegrityViolationException c) {
             throw new UnprocesableException(c.getMessage());
         }
     }

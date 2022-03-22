@@ -29,6 +29,7 @@ public class Profesor {
 
     private String comments;
 
+    @Column(columnDefinition = "VARCHAR(10) CHECK (branch IN ('FRONT', 'BACK', 'FULLSTACK'))")
     private String branch;
 
     // Relacion con tablas

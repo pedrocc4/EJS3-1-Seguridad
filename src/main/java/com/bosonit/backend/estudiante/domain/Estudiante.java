@@ -3,6 +3,7 @@ package com.bosonit.backend.estudiante.domain;
 import com.bosonit.backend.estudiante_asignatura.domain.Estudiante_Asignatura;
 import com.bosonit.backend.persona.domain.Persona;
 import com.bosonit.backend.utils.StringPrefixedSequenceIdGenerator;
+import lombok.Cleanup;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -33,6 +34,7 @@ public class Estudiante {
 
     private String comments;
 
+    @Column(columnDefinition = "VARCHAR(10) CHECK (branch IN ('FRONT', 'BACK', 'FULLSTACK'))")
     private String branch;
 
     // Relacion con tablas
@@ -40,7 +42,7 @@ public class Estudiante {
     @OneToOne(fetch = FetchType.EAGER)
     private Persona id_persona;
 
-//    @ManyToMany(cascade = {
+    //    @ManyToMany(cascade = {
 //            CascadeType.PERSIST,
 //            CascadeType.MERGE,
 //    }, // sin REMOVE (eliminar asignatura y no estudiantes)
