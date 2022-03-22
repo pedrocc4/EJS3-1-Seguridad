@@ -6,6 +6,7 @@ import com.bosonit.backend.persona.service.PersonaService;
 import com.bosonit.backend.utils.exceptions.PersonaNoEncontrada;
 import com.bosonit.backend.utils.exceptions.UnprocesableException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ public class PersonaController {
     private PersonaService service;
 
     @ResponseStatus(HttpStatus.CREATED)
+    @CrossOrigin(origins = " https://codepen.io/de4imo/pen/VwMRENP")
     @PostMapping("persona")
     public ResponseEntity<PersonaOutputDTO> addPersona(@RequestBody PersonaInputDTO personaInputDTO) {
         log.info("Intentando agregar: " + personaInputDTO);
@@ -30,6 +32,17 @@ public class PersonaController {
         } catch (UnprocesableException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "error", e);
         }
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @CrossOrigin(origins = " https://codepen.io/de4imo/pen/VwMRENP")
+    @PostMapping("addperson")
+    public ResponseEntity<PersonaOutputDTO> addPerson(
+            @RequestBody Object personaInputDTO) {
+        log.info("a ver..." + personaInputDTO);
+        PersonaOutputDTO personaOutputDTO = new PersonaOutputDTO();
+        BeanUtils.copyProperties(personaInputDTO, personaOutputDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(personaOutputDTO);
     }
 
     @ResponseStatus(HttpStatus.OK)
