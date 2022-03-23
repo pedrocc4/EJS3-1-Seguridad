@@ -5,18 +5,12 @@ import com.bosonit.backend.profesor.infrastructure.controller.dto.input.Profesor
 import com.bosonit.backend.profesor.infrastructure.controller.dto.output.ProfesorOutputDTO;
 import com.bosonit.backend.profesor.infrastructure.controller.dto.output.ProfesorPersonaOutputDTO;
 import com.bosonit.backend.profesor.service.ProfesorService;
-import com.bosonit.backend.utils.exceptions.PersonaNoEncontrada;
-import com.bosonit.backend.utils.exceptions.ProfesorNoEncontrado;
-import com.bosonit.backend.utils.exceptions.UnprocesableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.xml.transform.OutputKeys;
 import java.util.List;
 
 @Slf4j
@@ -30,18 +24,14 @@ public class ProfesorController {
     private ResponseEntity<Object> getProfesor(
             @PathVariable String id,
             @RequestParam(defaultValue = "simple") String outputType) {
-        try {
-            log.info("Intentando encontrar profesor con id: " + id);
-            log.info("Tipo respuesta: " + outputType);
-            if (outputType.equals("simple"))
-                return ResponseEntity.status(HttpStatus.OK).body(service.getProfesor(id));
-            else if (outputType.equals("full")) {
-                log.info("ha ejecutado full");
-                return ResponseEntity.status(HttpStatus.OK).body(service.getProfesor1(id));
-            }
-        } catch (ProfesorNoEncontrado e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
-        } // no es necesario, pero para que no salte error
+        log.info("Intentando encontrar profesor con id: " + id);
+        log.info("Tipo respuesta: " + outputType);
+        if (outputType.equals("simple"))
+            return ResponseEntity.status(HttpStatus.OK).body(service.getProfesor(id));
+        else if (outputType.equals("full")) {
+            log.info("ha ejecutado full");
+            return ResponseEntity.status(HttpStatus.OK).body(service.getProfesor1(id));
+        }
         return ResponseEntity.status(HttpStatus.OK).body(service.getProfesor(id));
     }
 
@@ -61,12 +51,10 @@ public class ProfesorController {
     @PostMapping("profesor")
     @ResponseStatus(HttpStatus.CREATED)
     private ResponseEntity<ProfesorOutputDTO> addProfesor(@RequestBody ProfesorInputDTO profesorInputDTO) {
-        try {
-            log.info("Intentando agregar: " + profesorInputDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(service.addProfesor(profesorInputDTO));
-        } catch (UnprocesableException e) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "error", e);
-        }
+
+        log.info("Intentando agregar: " + profesorInputDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.addProfesor(profesorInputDTO));
+
     }
 
     @PostMapping("profesor/{id}/estudiantes")
@@ -74,18 +62,16 @@ public class ProfesorController {
     private ResponseEntity<ProfesorOutputDTO> addEstudiantes(
             @PathVariable String id,
             @RequestBody List<String> ids_estudiantes) {
-        try {
-            log.info("Intentando agregar estudiantes: " + ids_estudiantes);
-            return ResponseEntity.status(HttpStatus.OK).body(service.addEstudiantes(id, ids_estudiantes));
-        } catch (ProfesorNoEncontrado e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
-        }
+
+        log.info("Intentando agregar estudiantes: " + ids_estudiantes);
+        return ResponseEntity.status(HttpStatus.OK).body(service.addEstudiantes(id, ids_estudiantes));
+
     }
 
     @GetMapping("profesor/{id}/estudiantes")
     @ResponseStatus(HttpStatus.OK)
-    private ResponseEntity<List<EstudianteOutputDTO> > getEstudiantes(
-            @PathVariable String id){
+    private ResponseEntity<List<EstudianteOutputDTO>> getEstudiantes(
+            @PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getEstudiantes(id));
     }
 
@@ -95,24 +81,18 @@ public class ProfesorController {
             @PathVariable String id,
             @RequestBody ProfesorInputDTO
                     profesorInputDTO) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(service.actProfesor(id, profesorInputDTO));
-        } catch (ProfesorNoEncontrado e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
-        } catch (UnprocesableException u) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "error", u);
-        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(service.actProfesor(id, profesorInputDTO));
+
     }
 
     @DeleteMapping("profesor/{id}")
     @ResponseStatus(HttpStatus.OK)
     private ResponseEntity<Void> delProfesor(@PathVariable String id) {
-        try {
-            service.delProfesor(id);
-            return ResponseEntity.ok().build();
-        } catch (ProfesorNoEncontrado e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
-        }
+
+        service.delProfesor(id);
+        return ResponseEntity.ok().build();
+
     }
 
     @PutMapping("profesor/{id}/persona") // FIXME post, put, patch?
@@ -120,10 +100,8 @@ public class ProfesorController {
     private ResponseEntity<ProfesorPersonaOutputDTO> addPersona(
             @PathVariable(name = "id") String id_profesor,
             @RequestParam(name = "persona") int id_persona) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(service.addPersona(id_profesor, id_persona));
-        } catch (ProfesorNoEncontrado | PersonaNoEncontrada e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "error", e);
-        }
+//
+        return ResponseEntity.status(HttpStatus.OK).body(service.addPersona(id_profesor, id_persona));
+
     }
 }

@@ -12,9 +12,7 @@ import com.bosonit.backend.profesor.infrastructure.controller.dto.output.Profeso
 import com.bosonit.backend.profesor.infrastructure.controller.dto.output.ProfesorPersonaOutputDTO;
 import com.bosonit.backend.profesor.infrastructure.controller.mapper.ProfesorMapper;
 import com.bosonit.backend.profesor.repository.ProfesorRepositoryJPA;
-import com.bosonit.backend.utils.exceptions.EstudianteNoEncontrado;
-import com.bosonit.backend.utils.exceptions.PersonaNoEncontrada;
-import com.bosonit.backend.utils.exceptions.ProfesorNoEncontrado;
+import com.bosonit.backend.utils.exceptions.EntidadNoEncontrada;
 import com.bosonit.backend.utils.exceptions.UnprocesableException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,11 +65,11 @@ public class ProfesorServiceImpl implements ProfesorService {
     public ProfesorOutputDTO addEstudiantes(String id, List<String> ids_estudiantes) {
         Profesor profesor =
                 repository.findById(id).orElseThrow(
-                        () -> new ProfesorNoEncontrado("Profesor con id: " + id + ", no encontrado"));
+                        () -> new EntidadNoEncontrada("Profesor con id: " + id + ", no encontrado"));
         List<Estudiante> estudiantes = ids_estudiantes.stream()
                 .map(ids_estudiante -> estudianteRepository
                         .findById(ids_estudiante)
-                        .orElseThrow(() -> new EstudianteNoEncontrado(
+                        .orElseThrow(() -> new EntidadNoEncontrada(
                                 "Estudiante con id: " + ids_estudiante + ", no encontrado")))
                 .collect(Collectors.toList());
         profesor.setEstudiantes(estudiantes);
@@ -81,20 +79,20 @@ public class ProfesorServiceImpl implements ProfesorService {
     @Override
     public ProfesorOutputDTO getProfesor(String id) {
         return mapper.toDTO(repository.findById(id)
-                .orElseThrow(() -> new ProfesorNoEncontrado("Profesor con id: " + id + ", no encontrado")));
+                .orElseThrow(() -> new EntidadNoEncontrada("Profesor con id: " + id + ", no encontrado")));
     }
 
     @Override
     public ProfesorPersonaOutputDTO getProfesor1(String id) {
         return mapper.toDTO1(repository.findById(id)
-                .orElseThrow(() -> new ProfesorNoEncontrado("Profesor con id: " + id + ", no encontrado")));
+                .orElseThrow(() -> new EntidadNoEncontrada("Profesor con id: " + id + ", no encontrado")));
     }
 
     @Override
     public ProfesorOutputDTO actProfesor(String id, ProfesorInputDTO profesorInputDTO) {
         try {
             Profesor profesor = repository.findById(id)
-                    .orElseThrow(() -> new ProfesorNoEncontrado("Profesor con id: " + id + ", no encontrado"));
+                    .orElseThrow(() -> new EntidadNoEncontrada("Profesor con id: " + id + ", no encontrado"));
 
             BeanUtils.copyProperties(profesorInputDTO, profesor);
             return mapper.toDTO(repository.save(profesor));
@@ -106,7 +104,7 @@ public class ProfesorServiceImpl implements ProfesorService {
     @Override
     public void delProfesor(String id) {
         repository.delete(repository.findById(id)
-                .orElseThrow(() -> new ProfesorNoEncontrado("Profesor con id: " + id + ", no encontrado")));
+                .orElseThrow(() -> new EntidadNoEncontrada("Profesor con id: " + id + ", no encontrado")));
     }
 
     @Override
@@ -122,10 +120,10 @@ public class ProfesorServiceImpl implements ProfesorService {
     @Override
     public ProfesorPersonaOutputDTO addPersona(String id_profesor, int id_persona) {
         Profesor profesor = repository.findById(id_profesor)
-                .orElseThrow(() -> new ProfesorNoEncontrado("Profesor con id: " + id_profesor + ", no encontrado"));
+                .orElseThrow(() -> new EntidadNoEncontrada("Profesor con id: " + id_profesor + ", no encontrado"));
 
         Persona persona = personaRepository.findById(id_persona)
-                .orElseThrow(() -> new ProfesorNoEncontrado("Persona con id: " + id_persona + ", no encontrada"));
+                .orElseThrow(() -> new EntidadNoEncontrada("Persona con id: " + id_persona + ", no encontrada"));
 
         profesor.setId_persona(persona);
 

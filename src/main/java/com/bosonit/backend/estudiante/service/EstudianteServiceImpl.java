@@ -11,12 +11,9 @@ import com.bosonit.backend.estudiante.repository.EstudianteRepositoryJPA;
 import com.bosonit.backend.estudiante_asignatura.service.Estudiante_AsignaturaService;
 import com.bosonit.backend.persona.domain.Persona;
 import com.bosonit.backend.persona.repository.PersonaRepositoryJPA;
-import com.bosonit.backend.utils.exceptions.AsignaturaNoEncontrada;
-import com.bosonit.backend.utils.exceptions.EstudianteNoEncontrado;
-import com.bosonit.backend.utils.exceptions.PersonaNoEncontrada;
+import com.bosonit.backend.utils.exceptions.EntidadNoEncontrada;
 import com.bosonit.backend.utils.exceptions.UnprocesableException;
 import lombok.extern.slf4j.Slf4j;
-import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -54,7 +51,7 @@ public class EstudianteServiceImpl implements EstudianteService {
             if (estudiante.getId_persona() != null) {
                 Persona persona = personaRepository.findById(estudianteInputDTO.getId_persona().getId())
                         .orElseThrow(
-                                () -> new PersonaNoEncontrada(
+                                () -> new EntidadNoEncontrada(
                                         "Persona con id: "
                                                 + estudianteInputDTO.getId_persona()
                                                 + ", no encontrada"));
@@ -71,31 +68,31 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @Override
     public EstudianteOutputDTO getEstudiante(String id)
-            throws EstudianteNoEncontrado {
+            throws EntidadNoEncontrada {
         return mapper.toDTO(repository
                 .findById(id)
-                .orElseThrow(() -> new EstudianteNoEncontrado
+                .orElseThrow(() -> new EntidadNoEncontrada
                         ("Estudiante con id: " + id + ", no encontrado")));
     }
 
     @Override
     public EstudiantePersonaOutputDTO getEstudiante2(String id)
-            throws EstudianteNoEncontrado {
+            throws EntidadNoEncontrada {
         return mapper.toDTO2(repository
                 .findById(id)
-                .orElseThrow(() -> new EstudianteNoEncontrado
+                .orElseThrow(() -> new EntidadNoEncontrada
                         ("Estudiante con id: " + id + ", no encontrado")));
     }
 
     @Override
     public EstudianteOutputDTO actEstudiante(String id, EstudianteInputDTO estudianteInputDTO)
-            throws ConstraintViolationException, EstudianteNoEncontrado {
+            throws ConstraintViolationException, EntidadNoEncontrada {
         try {
             Estudiante estudiante =
                     repository
                             .findById(id)
                             .orElseThrow(() ->
-                                    new EstudianteNoEncontrado(
+                                    new EntidadNoEncontrada(
                                             "Estudiante con id: " + id + ", no encontrado"));
 
             // Asignacion de nuevos atributos
@@ -110,7 +107,7 @@ public class EstudianteServiceImpl implements EstudianteService {
     public void delEstudiante(String id) {
         repository.delete((repository
                 .findById(id)
-                .orElseThrow(() -> new EstudianteNoEncontrado
+                .orElseThrow(() -> new EntidadNoEncontrada
                         ("Estudiante con id: " + id + ", no encontrado"))));
     }
 
@@ -128,14 +125,14 @@ public class EstudianteServiceImpl implements EstudianteService {
     public EstudianteOutputDTO addAsignaturas(String id, List<String> idsAsignaturas) {
         try {
             Estudiante estudiante = repository.findById(id)
-                    .orElseThrow(() -> new EstudianteNoEncontrado(
+                    .orElseThrow(() -> new EntidadNoEncontrada(
                             "Estudiante con id: " + id + ", no encontrado"));
 
             List<Asignatura> asignaturas = idsAsignaturas
                     .stream()
                     .map(idsAsignatura -> asignaturaRepository
                             .findById(idsAsignatura)
-                            .orElseThrow(() -> new AsignaturaNoEncontrada(
+                            .orElseThrow(() -> new EntidadNoEncontrada(
                                     "Asignatura con id: " + id + ", no encontrada"))).toList();
             //estudiante.setAsignaturas(asignaturas);
             asignaturas.forEach(asignatura -> service.addEstudiante_Asignatura(estudiante, asignatura));
@@ -151,9 +148,9 @@ public class EstudianteServiceImpl implements EstudianteService {
     @Override
     public EstudiantePersonaOutputDTO addPersona(String id_estudiante, int id_persona) {
         Persona persona = personaRepository.findById(id_persona)
-                .orElseThrow(() -> new PersonaNoEncontrada("Persona con id: " + id_persona + ", no encontrada"));
+                .orElseThrow(() -> new EntidadNoEncontrada("Persona con id: " + id_persona + ", no encontrada"));
         Estudiante estudiante = repository.findById(id_estudiante)
-                .orElseThrow(() -> new EstudianteNoEncontrado("Estudiante con id: " + id_estudiante + ", no encontrado"));
+                .orElseThrow(() -> new EntidadNoEncontrada("Estudiante con id: " + id_estudiante + ", no encontrado"));
 
         estudiante.setId_persona(persona);
         return mapper.toDTO2(repository.save(estudiante));

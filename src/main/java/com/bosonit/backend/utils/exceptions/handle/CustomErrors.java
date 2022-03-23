@@ -20,8 +20,8 @@ public class CustomErrors extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_ACCEPTABLE);
     }
 
-    @ExceptionHandler(PersonaNoEncontrada.class)
-    public final ResponseEntity<ExceptionResponse> handleNotFoundException(PersonaNoEncontrada ex, WebRequest request) {
+    @ExceptionHandler(EntidadNoEncontrada.class)
+    public final ResponseEntity<ExceptionResponse> handleNotFoundException(EntidadNoEncontrada ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false), HttpStatus.NOT_ACCEPTABLE.getReasonPhrase());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_ACCEPTABLE);
@@ -34,24 +34,4 @@ public class CustomErrors extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_ACCEPTABLE);
     }
 
-    @ExceptionHandler(EstudianteNoEncontrado.class)
-    public final ResponseEntity<ExceptionResponse> handleNotFoundException(EstudianteNoEncontrado ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
-                request.getDescription(false), HttpStatus.NOT_ACCEPTABLE.getReasonPhrase());
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_ACCEPTABLE);
-    }
-
-    @ExceptionHandler(ProfesorNoEncontrado.class)
-    public final ResponseEntity<ExceptionResponse> handleNotFoundException(ProfesorNoEncontrado ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
-                request.getDescription(false), HttpStatus.NOT_ACCEPTABLE.getReasonPhrase());
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_ACCEPTABLE);
-    }
-
-    @ExceptionHandler(AsignaturaNoEncontrada.class)
-    public final ResponseEntity<ExceptionResponse> handleNotFoundException(AsignaturaNoEncontrada ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
-                request.getDescription(false), HttpStatus.NOT_ACCEPTABLE.getReasonPhrase());
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_ACCEPTABLE);
-    }
 }
