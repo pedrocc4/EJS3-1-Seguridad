@@ -14,4 +14,5 @@ public interface ProfesorRepositoryJPA extends JpaRepository<Profesor, String> {
 
     @Query("SELECT e FROM Profesor p, Estudiante e WHERE p.id_profesor = ?1")
     List<Estudiante> getEstudiantes(String id);
+
 }

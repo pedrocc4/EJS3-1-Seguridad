@@ -8,13 +8,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Date;
 
 @RestControllerAdvice
 public class CustomErrors extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(UnprocesableException.class)
-    public final ResponseEntity<ExceptionResponse> handleUnprocesableEntity(UnprocesableException ex, WebRequest request) {
+    @ExceptionHandler(ConstraintViolationException.class)
+    public final ResponseEntity<ExceptionResponse> handleUnprocesableEntity(ConstraintViolationException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false), HttpStatus.NOT_ACCEPTABLE.getReasonPhrase());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_ACCEPTABLE);

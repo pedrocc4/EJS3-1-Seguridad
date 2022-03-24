@@ -45,14 +45,14 @@ public class Persona {
     @NotNull
     private Boolean active;
 
-    @NotNull
-    private Date created_date;
+    @NotNull // FIXME usar @column para notnull
+        private Date created_date;
 
     private String imagen_url;
 
     private Date termination_date;
 
-    // @Transient
+    //@Transient
     @Column(unique = true, updatable = false, insertable = false)
     private TipoPersona tipoPersona;
 

@@ -5,14 +5,13 @@ import com.bosonit.backend.persona.infrastructure.controller.dto.input.PersonaIn
 import com.bosonit.backend.persona.infrastructure.controller.dto.output.PersonaOutputDTO;
 import com.bosonit.backend.persona.infrastructure.controller.mapper.PersonaMapper;
 import com.bosonit.backend.persona.repository.PersonaRepositoryJPA;
+import com.bosonit.backend.utils.exceptions.ConstraintViolationException;
 import com.bosonit.backend.utils.exceptions.EntidadNoEncontrada;
 import com.bosonit.backend.utils.exceptions.PersonaYaRegistrada;
-import com.bosonit.backend.utils.exceptions.UnprocesableException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 @Service
@@ -25,15 +24,10 @@ public class PersonaServiceImpl implements PersonaService {
     private PersonaMapper mapper;
 
     @Override
-    public PersonaOutputDTO addPersona(PersonaInputDTO personaInputDTO) {
+    public PersonaOutputDTO addPersona(PersonaInputDTO personaInputDTO) throws ConstraintViolationException {
         if (repository.findByUsername(personaInputDTO.getUsuario()).isPresent())
             throw new PersonaYaRegistrada("Usuario ya registrado");
-//        try {
         return mapper.toDTO(repository.save(mapper.toEntity(personaInputDTO)));
-//        } catch (ConstraintViolationException e) {
-//            throw new UnprocesableException(e.getMessage());
-//        }
-        //FIXME como hacer sin el catch?
     }
 
     @Override
@@ -58,21 +52,15 @@ public class PersonaServiceImpl implements PersonaService {
     }
 
     @Override
-    public void actPersona(int id, PersonaInputDTO personaInputDTO) {
-        try {
-            Persona persona =
-                    repository
-                            .findById(id)
-                            .orElseThrow(() ->
-                                    new EntidadNoEncontrada(
-                                            "Persona con id: " + id + ", no encontrada"));
-            // Asignacion de nuevos atributos
+    public void actPersona(int id, PersonaInputDTO personaInputDTO) throws ConstraintViolationException{
+        Persona persona =
+                repository.findById(id)
+                        .orElseThrow(() ->
+                                new EntidadNoEncontrada("Persona con id: " + id + ", no encontrada"));
 
-            BeanUtils.copyProperties(personaInputDTO, persona);
-            repository.save(persona);
-        } catch (ConstraintViolationException e) {
-            throw new UnprocesableException(e.getMessage());
-        }
+        // Asignacion de nuevos atributos
+        BeanUtils.copyProperties(personaInputDTO, persona);
+        repository.save(persona);
     }
 
     @Override

@@ -5,13 +5,12 @@ import com.bosonit.backend.asignatura.infrastructure.controller.dto.AsignaturaIn
 import com.bosonit.backend.asignatura.infrastructure.controller.dto.AsignaturaOutputDTO;
 import com.bosonit.backend.asignatura.infrastructure.controller.mapper.AsignaturaMapper;
 import com.bosonit.backend.asignatura.repository.AsignaturaRepositoryJPA;
+import com.bosonit.backend.utils.exceptions.ConstraintViolationException;
 import com.bosonit.backend.utils.exceptions.EntidadNoEncontrada;
-import com.bosonit.backend.utils.exceptions.UnprocesableException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 @Service
@@ -19,17 +18,14 @@ public class AsignaturaServiceImpl implements AsignaturaService {
 
     @Autowired
     private AsignaturaRepositoryJPA repository;
+
     @Autowired
     private AsignaturaMapper mapper;
 
 
     @Override
-    public AsignaturaOutputDTO addAsignatura(AsignaturaInputDTO asignaturaInputDTO) {
-        try {
-            return mapper.toDTO(repository.save(mapper.toEntity(asignaturaInputDTO)));
-        } catch (ConstraintViolationException e) {
-            throw new UnprocesableException(e.getMessage());
-        }
+    public AsignaturaOutputDTO addAsignatura(AsignaturaInputDTO asignaturaInputDTO) throws ConstraintViolationException {
+        return mapper.toDTO(repository.save(mapper.toEntity(asignaturaInputDTO)));
     }
 
     @Override
@@ -39,16 +35,15 @@ public class AsignaturaServiceImpl implements AsignaturaService {
     }
 
     @Override
-    public AsignaturaOutputDTO actAsignatura(String id, AsignaturaInputDTO asignaturaInputDTO) {
+    public AsignaturaOutputDTO actAsignatura(String id, AsignaturaInputDTO asignaturaInputDTO)
+            throws ConstraintViolationException {
         Asignatura asignatura = repository.findById(id)
                 .orElseThrow(() -> new EntidadNoEncontrada("Asignatura con id: " + id + ", no encontrada"));
 
+        // Asignacion de nuevos atributos
         BeanUtils.copyProperties(asignaturaInputDTO, asignatura);
-        try {
-            return mapper.toDTO(repository.save(asignatura));
-        } catch (ConstraintViolationException e) {
-            throw new UnprocesableException(e.getMessage());
-        }
+        return mapper.toDTO(repository.save(asignatura));
+
     }
 
     @Override
@@ -59,6 +54,6 @@ public class AsignaturaServiceImpl implements AsignaturaService {
 
     @Override
     public List<AsignaturaOutputDTO> getAsignaturas() {
-        return null;
+        return mapper.toDTOList(repository.findAll());
     }
 }

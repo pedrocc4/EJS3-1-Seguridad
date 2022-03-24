@@ -31,7 +31,7 @@ public class PersonaController {
     @CrossOrigin(origins = " https://codepen.io/de4imo/pen/VwMRENP")
     @PostMapping("addperson")
     public ResponseEntity<PersonaOutputDTO> addPerson(
-            @RequestBody Object personaInputDTO) {
+            @RequestBody PersonaInputDTO personaInputDTO) {
         log.info("a ver..." + personaInputDTO);
         PersonaOutputDTO personaOutputDTO = new PersonaOutputDTO();
         BeanUtils.copyProperties(personaInputDTO, personaOutputDTO);

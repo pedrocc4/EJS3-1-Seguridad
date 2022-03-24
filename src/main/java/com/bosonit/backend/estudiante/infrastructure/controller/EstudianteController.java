@@ -83,6 +83,8 @@ public class EstudianteController {
 
     }
 
+
+    // Podria llegar a omitirse puesto que la persona se asigna en el momento de creacion del cliente (en un principio)
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("estudiante/{id}/persona")
     public ResponseEntity<EstudiantePersonaOutputDTO> addPersona(
@@ -90,6 +92,5 @@ public class EstudianteController {
             @RequestParam(name = "persona") int id_persona) {
         log.info("Intentando agregar persona con id: " + id_persona + " a estudiante con id: " + id_estudiante);
         return ResponseEntity.status(HttpStatus.OK).body(service.addPersona(id_estudiante, id_persona));
-
     }
 }
