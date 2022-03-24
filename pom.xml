@@ -68,11 +68,6 @@
             <version>1.4.7.RELEASE</version>
         </dependency>
         <dependency>
-            <groupId>com.bosonit.backend</groupId>
-            <artifactId>itinerario-continuacion</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.plugin</groupId>
             <artifactId>spring-plugin-core</artifactId>
             <version>2.0.0.RELEASE</version>
@@ -80,7 +75,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
-            <version>2.1.6.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>

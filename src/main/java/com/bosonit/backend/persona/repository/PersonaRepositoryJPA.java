@@ -13,6 +13,10 @@ import java.util.Optional;
 public interface PersonaRepositoryJPA extends JpaRepository<Persona, Integer> {
     @Query("SELECT p FROM Persona p WHERE p.usuario = ?1")
     Optional<Persona> findByUsername(String username);
-    //TODO si profe o estu
 
+    @Query("SELECT e FROM Persona p, Estudiante  e WHERE e.id_persona = ?1")
+    Optional<Estudiante> getEstudiante(Persona persona);
+
+    @Query("SELECT e FROM Persona p, Profesor  e WHERE e.id_persona = ?1")
+    Optional<Profesor> getProfesor(Persona persona);
 }

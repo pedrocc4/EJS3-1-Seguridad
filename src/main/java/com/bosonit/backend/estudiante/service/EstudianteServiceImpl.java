@@ -11,6 +11,8 @@ import com.bosonit.backend.estudiante.repository.EstudianteRepositoryJPA;
 import com.bosonit.backend.estudiante_asignatura.service.Estudiante_AsignaturaService;
 import com.bosonit.backend.persona.domain.Persona;
 import com.bosonit.backend.persona.repository.PersonaRepositoryJPA;
+import com.bosonit.backend.profesor.infrastructure.controller.dto.output.ProfesorOutputDTO;
+import com.bosonit.backend.profesor.infrastructure.controller.mapper.ProfesorMapper;
 import com.bosonit.backend.utils.exceptions.ConstraintViolationException;
 import com.bosonit.backend.utils.exceptions.EntidadNoEncontrada;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +41,9 @@ public class EstudianteServiceImpl implements EstudianteService {
     @Autowired
     private Estudiante_AsignaturaService service;
 
+    @Autowired
+    private ProfesorMapper profesorMapper;
+
     @Override
     public EstudianteOutputDTO addEstudiante(EstudianteInputDTO estudianteInputDTO)
             throws ConstraintViolationException {
@@ -62,8 +67,7 @@ public class EstudianteServiceImpl implements EstudianteService {
 
         // es posible que no se le asigne una persona a estudiante, en esa casuistica
         // se haria de forma manual con el metodo Estudiante::addPersona
-        return mapper.toDTO(
-                repository.save(estudiante));
+        return mapper.toDTO(repository.save(estudiante));
     }
 
     @Override
@@ -87,16 +91,16 @@ public class EstudianteServiceImpl implements EstudianteService {
     @Override
     public EstudianteOutputDTO actEstudiante(String id, EstudianteInputDTO estudianteInputDTO)
             throws ConstraintViolationException, EntidadNoEncontrada {
-            Estudiante estudiante =
-                    repository
-                            .findById(id)
-                            .orElseThrow(() ->
-                                    new EntidadNoEncontrada(
-                                            "Estudiante con id: " + id + ", no encontrado"));
+        Estudiante estudiante =
+                repository
+                        .findById(id)
+                        .orElseThrow(() ->
+                                new EntidadNoEncontrada(
+                                        "Estudiante con id: " + id + ", no encontrado"));
 
-            // Asignacion de nuevos atributos
-            BeanUtils.copyProperties(estudianteInputDTO, estudiante);
-            return mapper.toDTO(repository.save(estudiante));
+        // Asignacion de nuevos atributos
+        BeanUtils.copyProperties(estudianteInputDTO, estudiante);
+        return mapper.toDTO(repository.save(estudiante));
     }
 
     @Override
@@ -119,26 +123,26 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @Override
     public EstudianteOutputDTO addAsignaturas(String id, List<String> idsAsignaturas)
-    throws ConstraintViolationException{
+            throws ConstraintViolationException {
 
-            Estudiante estudiante = repository.findById(id)
-                    .orElseThrow(() -> new EntidadNoEncontrada(
-                            "Estudiante con id: " + id + ", no encontrado"));
+        Estudiante estudiante = repository.findById(id)
+                .orElseThrow(() -> new EntidadNoEncontrada(
+                        "Estudiante con id: " + id + ", no encontrado"));
 
-            List<Asignatura> asignaturas = idsAsignaturas
-                    .stream()
-                    .map(idsAsignatura -> asignaturaRepository
-                            .findById(idsAsignatura)
-                            .orElseThrow(() -> new EntidadNoEncontrada(
-                                    "Asignatura con id: " + id + ", no encontrada"))).toList();
+        List<Asignatura> asignaturas = idsAsignaturas
+                .stream()
+                .map(idsAsignatura -> asignaturaRepository
+                        .findById(idsAsignatura)
+                        .orElseThrow(() -> new EntidadNoEncontrada(
+                                "Asignatura con id: " + id + ", no encontrada"))).toList();
 
-            //estudiante.setAsignaturas(asignaturas);
-            // no asignamos a la entidad estudiante -> asignaturas, asignamos en la tabla intermedia
-            // y viceversa
+        //estudiante.setAsignaturas(asignaturas);
+        // no asignamos a la entidad estudiante -> asignaturas, asignamos en la tabla intermedia
+        // y viceversa
 
-            asignaturas.forEach(asignatura -> service.addEstudiante_Asignatura(estudiante, asignatura));
+        asignaturas.forEach(asignatura -> service.addEstudiante_Asignatura(estudiante, asignatura));
 
-            return mapper.toDTO(repository.save(estudiante));
+        return mapper.toDTO(repository.save(estudiante));
     }
 
     @Override
@@ -151,5 +155,14 @@ public class EstudianteServiceImpl implements EstudianteService {
 
         estudiante.setId_persona(persona);
         return mapper.toDTO2(repository.save(estudiante));
+    }
+
+    @Override
+    public ProfesorOutputDTO getProfesor(String id) {
+        Estudiante estudiante = repository.findById(id)
+                .orElseThrow(() -> new EntidadNoEncontrada("Estudiante con id: " + id + ", no encontrado"));
+
+        return profesorMapper.toDTO(repository.getProfesor(estudiante)
+                .orElseThrow(() -> new EntidadNoEncontrada("Estudiante con id: " + id + ", no tiene profesor asignado")));
     }
 }

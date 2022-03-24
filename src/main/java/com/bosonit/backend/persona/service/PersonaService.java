@@ -8,7 +8,7 @@ import java.util.List;
 public interface PersonaService {
     PersonaOutputDTO addPersona(PersonaInputDTO personaInputDTO);
 
-    PersonaOutputDTO getPersona(Integer id);
+    Object getPersona(Integer id, String outputType);
 
     List<PersonaOutputDTO> getPersonas();
 

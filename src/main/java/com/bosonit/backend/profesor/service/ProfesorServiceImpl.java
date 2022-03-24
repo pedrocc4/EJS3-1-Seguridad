@@ -14,6 +14,7 @@ import com.bosonit.backend.profesor.infrastructure.controller.mapper.ProfesorMap
 import com.bosonit.backend.profesor.repository.ProfesorRepositoryJPA;
 import com.bosonit.backend.utils.exceptions.ConstraintViolationException;
 import com.bosonit.backend.utils.exceptions.EntidadNoEncontrada;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class ProfesorServiceImpl implements ProfesorService {
 
@@ -53,10 +55,11 @@ public class ProfesorServiceImpl implements ProfesorService {
                                             + profesorInputDTO.getId_persona()
                                             + ", no encontrada"));
 
-            if (persona.getTipoPersona() != null) {
+            if (persona.getTipoPersona() == null) {
                 persona.setTipoPersona(Persona.TipoPersona.PROFESOR);
-                personaRepository.save(persona);
+                log.info(String.valueOf(personaRepository.save(persona)));
                 profesor.setId_persona(persona);
+
             }
         }
 

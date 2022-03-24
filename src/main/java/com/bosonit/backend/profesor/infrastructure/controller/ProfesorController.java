@@ -95,7 +95,7 @@ public class ProfesorController {
 
     }
 
-    @PutMapping("profesor/{id}/persona") // FIXME post, put, patch?
+    @PutMapping("profesor/{id}/persona")
     @ResponseStatus(HttpStatus.OK)
     private ResponseEntity<ProfesorPersonaOutputDTO> addPersona(
             @PathVariable(name = "id") String id_profesor,

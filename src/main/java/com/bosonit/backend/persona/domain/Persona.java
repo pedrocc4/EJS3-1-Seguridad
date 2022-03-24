@@ -56,7 +56,6 @@ public class Persona {
     @Column(unique = true, updatable = false, insertable = false)
     private TipoPersona tipoPersona;
 
-    //TODO una persona solo puede ser o estudiante o profesor ¿solución?
     @Getter
     public
     enum TipoPersona {

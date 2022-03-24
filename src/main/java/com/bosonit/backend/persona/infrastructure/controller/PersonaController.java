@@ -20,7 +20,6 @@ public class PersonaController {
     private PersonaService service;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @CrossOrigin(origins = " https://codepen.io/de4imo/pen/VwMRENP")
     @PostMapping("persona")
     public ResponseEntity<PersonaOutputDTO> addPersona(@RequestBody PersonaInputDTO personaInputDTO) {
         log.info("Intentando agregar: " + personaInputDTO);
@@ -40,9 +39,11 @@ public class PersonaController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("persona/{id}")
-    public ResponseEntity<PersonaOutputDTO> getPersona(@PathVariable int id) {
-        log.info("Intentando buscar persona con id: " + id);
-        return ResponseEntity.ok().body(service.getPersona(id));
+    public ResponseEntity<Object> getPersona(
+            @PathVariable int id,
+            @RequestParam(defaultValue = "simple") String outputType) {
+        log.info("Intentando buscar persona con id: " + id + ", output: " + outputType);
+        return ResponseEntity.ok().body(service.getPersona(id, outputType));
     }
 
     @GetMapping("personas")

@@ -4,6 +4,7 @@ import com.bosonit.backend.estudiante.infrastructure.controller.dto.input.Estudi
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.output.EstudianteOutputDTO;
 import com.bosonit.backend.estudiante.infrastructure.controller.dto.output.EstudiantePersonaOutputDTO;
 import com.bosonit.backend.estudiante.service.EstudianteService;
+import com.bosonit.backend.profesor.infrastructure.controller.dto.output.ProfesorOutputDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -74,7 +75,7 @@ public class EstudianteController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping("estudiante/{id}/asignaturas") // FIXME post? put? patch?
+    @PutMapping("estudiante/{id}/asignaturas")
     public ResponseEntity<EstudianteOutputDTO> addAsignaturas(
             @PathVariable String id,
             @RequestBody List<String> idsAsignaturas) {
@@ -82,7 +83,6 @@ public class EstudianteController {
         return ResponseEntity.status(HttpStatus.OK).body(service.addAsignaturas(id, idsAsignaturas));
 
     }
-
 
     // Podria llegar a omitirse puesto que la persona se asigna en el momento de creacion del cliente (en un principio)
     @ResponseStatus(HttpStatus.OK)
@@ -93,4 +93,13 @@ public class EstudianteController {
         log.info("Intentando agregar persona con id: " + id_persona + " a estudiante con id: " + id_estudiante);
         return ResponseEntity.status(HttpStatus.OK).body(service.addPersona(id_estudiante, id_persona));
     }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("estudiante/{id}/profesor")
+    public ResponseEntity<ProfesorOutputDTO> getProfesor(
+            @PathVariable String id) {
+        log.info("Intentando obtener profesor de estudiante con id: " + id);
+        return ResponseEntity.status(HttpStatus.OK).body(service.getProfesor(id));
+    }
+
 }
