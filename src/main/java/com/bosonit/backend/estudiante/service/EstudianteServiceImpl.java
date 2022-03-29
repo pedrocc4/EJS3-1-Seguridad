@@ -20,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -129,12 +130,16 @@ public class EstudianteServiceImpl implements EstudianteService {
                 .orElseThrow(() -> new EntidadNoEncontrada(
                         "Estudiante con id: " + id + ", no encontrado"));
 
-        List<Asignatura> asignaturas = idsAsignaturas
-                .stream()
-                .map(idsAsignatura -> asignaturaRepository
-                        .findById(idsAsignatura)
-                        .orElseThrow(() -> new EntidadNoEncontrada(
-                                "Asignatura con id: " + id + ", no encontrada"))).toList();
+        List<Asignatura> asignaturas;
+        List<Asignatura> list = new ArrayList<>();
+        for (String idsAsignatura : idsAsignaturas) {
+            Asignatura orElseThrow = asignaturaRepository
+                    .findById(idsAsignatura)
+                    .orElseThrow(() -> new EntidadNoEncontrada(
+                            "Asignatura con id: " + id + ", no encontrada"));
+            list.add(orElseThrow);
+        }
+        asignaturas = list;
 
         //estudiante.setAsignaturas(asignaturas);
         // no asignamos a la entidad estudiante -> asignaturas, asignamos en la tabla intermedia
