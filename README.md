@@ -13,4 +13,4 @@ respuestas personalizadas para dos códigos de error.
 
 Partiendo de este ejercicio, implementamos varias tablas para manejar la relación entre ellas.
 
-**Resolución**: [Enlace](https://github.com/pedrocc4/EJ3-1-CRUD-con-relaciones-entre-tablas/edit/JPA-CRUD)
+**Resolución**: [Enlace](https://github.com/pedrocc4/EJ3-1-CRUD-con-relaciones-entre-tablas)
