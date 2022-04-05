@@ -13,9 +13,4 @@ respuestas personalizadas para dos códigos de error.
 
 Partiendo de este ejercicio, implementamos varias tablas para manejar la relación entre ellas.
 
-**Resolución**: *null*
-
-### Trello
-
-En este [enlace](https://trello.com/b/B3j82nBM/ej3-1-crud-con-relaciones-entre-tablas)
-muestro el proceso realizado con el sistema de tableros de trello.
+**Resolución**: [Enlace](https://github.com/pedrocc4/EJ3-1-CRUD-con-relaciones-entre-tablas/edit/JPA-CRUD)
