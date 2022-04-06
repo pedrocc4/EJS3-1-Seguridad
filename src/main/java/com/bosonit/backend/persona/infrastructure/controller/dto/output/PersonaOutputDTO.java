@@ -11,6 +11,7 @@ public class PersonaOutputDTO {
     private String usuario;
     private String name;
     private String surname;
+    private String password;
     private String company_email;
     private String personal_email;
     private String city;
