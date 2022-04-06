@@ -18,5 +18,6 @@ public class PersonaInputDTO {
     private Date created_date;
     private String imagen_url;
     private Date termination_date;
+    private boolean admin;
     private Persona.TipoPersona tipoPersona;
 }
