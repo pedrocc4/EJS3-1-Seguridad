@@ -1,4 +1,4 @@
-package com.bosonit.backend.persona.infrastructure.controller;
+package com.bosonit.backend.security;
 
 import com.bosonit.backend.persona.infrastructure.controller.dto.output.PersonaOutputDTO;
 import com.bosonit.backend.persona.service.PersonaService;
